@@ -1,5 +1,5 @@
 # -*- coding: utf-8  -*-
-"""Cup package."""
+"""Package for built-in cups."""
 
 # Copyright (C) 2015 Alexander Jones
 #
@@ -15,9 +15,3 @@
 #
 # You should have received a copy of the GNU Lesser General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
-
-from .default import SimpleMatch
-
-
-def getCupMatchClass():
-    return SimpleMatch.SimpleMatch
