@@ -16,7 +16,7 @@
 # You should have received a copy of the GNU Lesser General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from __future__ import unicode_literals
+from __future__ import print_function, unicode_literals
 
 from competitions.cup import getCupMatchClass
 
@@ -44,12 +44,12 @@ class PowerOfTwoSingleEliminationCup(object):
                 raise ValueError('Wrong number of teams')
             self.teams = teams
         self.matches = []
-        match_count = self.team_count / 2
+        match_count = self.team_count // 2
         self.matches.append([Match(self.teams[i * 2], self.teams[i * 2 + 1])
                              for i in range(match_count)])
         match_num = 1
         for __ in range(1, rounds):
-            match_count /= 2
+            match_count //= 2
             round = []
             for ___ in range(match_count):
                 round.append(Match('Match {} Winner'.format(match_num),
@@ -78,7 +78,7 @@ class PowerOfTwoSingleEliminationCup(object):
             match.play()
             winner = match.winner
         try:
-            next_match = self.matches[self.index[0] + 1][self.index[1] / 2]
+            next_match = self.matches[self.index[0] + 1][self.index[1] // 2]
             if self.index[1] % 2 == 0:
                 next_match.team1 = winner
             else:
@@ -108,8 +108,8 @@ class PowerOfTwoSingleEliminationCup(object):
         first_team = True
         for round in range(self.round_count):
             match_num = 0
-            div = int(2 * 2 ** round)
-            mod = int(div / 2 - 1)
+            div = 2 * 2 ** round
+            mod = div // 2 - 1
             for i in range(line_count):
                 if i % div == mod:
                     if first_team:
@@ -127,4 +127,4 @@ class PowerOfTwoSingleEliminationCup(object):
                 else:
                     lines[i].append(space)
         for line in lines:
-            print ''.join(line)
+            print(''.join(line))
