@@ -18,6 +18,13 @@
 
 from .default import SimpleMatch
 
+CupMatchClass = SimpleMatch.SimpleMatch
+
 
 def getCupMatchClass():
-    return SimpleMatch.SimpleMatch
+    return CupMatchClass
+
+
+def setCupMatchClass(cls):
+    global CupMatchClass
+    CupMatchClass = cls
