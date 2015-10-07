@@ -26,7 +26,13 @@ Match = getCupMatchClass()
 
 class PowerOfTwoSingleEliminationCup(object):
     def __init__(self, rounds=0, teams=[]):
-        """Constructor."""
+        """Constructor.
+
+        @param rounds: The number of rounds
+        @type rounds: int
+        @param teams: An optional list of teams
+        @type teams: list
+        """
         self.index = [0, -1]
         self.round_count = rounds
         self.team_count = 2 ** rounds
@@ -34,6 +40,8 @@ class PowerOfTwoSingleEliminationCup(object):
             self.teams = list(map(lambda x: 'Team ' + str(x),
                                   range(1, self.team_count + 1)))
         else:
+            if len(teams) != self.team_count:
+                raise ValueError('Wrong number of teams')
             self.teams = teams
         self.matches = []
         match_count = self.team_count / 2
@@ -50,7 +58,11 @@ class PowerOfTwoSingleEliminationCup(object):
             self.matches.append(round)
 
     def play_match(self):
-        """Play a cup match."""
+        """Play a cup match.
+
+        @return: Whether the cup has concluded
+        @rtype: bool
+        """
         self.index[1] += 1
         round = self.matches[self.index[0]]
         match = None
@@ -76,8 +88,13 @@ class PowerOfTwoSingleEliminationCup(object):
 
         return False
 
-    def fix_first_round(self):
-        """Update first-round matches."""
+    def update_teams(self, teams):
+        """Update the list of teams and the first-round matches.
+
+        @param teams: The new list of teams
+        @type teams: list
+        """
+        self.teams = teams
         first_round = self.matches[0]
         for x in range(len(first_round)):
             first_round[x].team1 = self.teams[x * 2]
