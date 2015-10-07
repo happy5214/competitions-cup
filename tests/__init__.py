@@ -35,3 +35,23 @@ class TestCase(unittest.TestCase):
         def assertCountEqual(self, *args, **kwargs):
             """Wrapper of assertItemsEqual()."""
             return self.assertItemsEqual(*args, **kwargs)
+
+
+class TestMatch(object):
+    def __init__(self, team1, team2):
+        self.team1 = team1
+        self.team2 = team2
+        self.score1 = ''
+        self.score2 = ''
+
+    def __str__(self):
+        return '{0} {1} - {2} {3}'.format(self.team1, self.score1,
+                                          self.score2, self.team2)
+
+    def shortstr(self):
+        return '{0}-{1}'.format(self.score1, self.score2)
+
+    def play(self):
+        self.score1 = 5
+        self.score2 = 0
+        self.winner = self.team1
