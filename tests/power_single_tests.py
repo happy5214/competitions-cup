@@ -20,9 +20,9 @@ from __future__ import unicode_literals
 
 # import unittest
 
-from . import TestCase, TestMatch
+from . import TestCase
 
-import competitions.cup
+from competitions.match import config
 from competitions.cup.default.PowerOfTwoSingleEliminationCup import PowerOfTwoSingleEliminationCup
 
 
@@ -32,7 +32,7 @@ class TestPowerOfTwoSingleEliminationCup(TestCase):
 
     @classmethod
     def setUpClass(cls):
-        competitions.cup.setCupMatchClass(TestMatch)
+        config.base_match = 'competitions.test'
 
     def test_team_count_validation(self):
         """Test team count checking in constructor."""

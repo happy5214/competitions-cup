@@ -18,10 +18,10 @@
 
 from __future__ import print_function, unicode_literals
 
-from competitions.cup import getCupMatchClass
+from competitions.match import config
 
 
-Match = getCupMatchClass()
+Match = config.base_match
 
 
 class PowerOfTwoSingleEliminationCup(object):

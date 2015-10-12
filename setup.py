@@ -1,3 +1,4 @@
+# -*- coding: utf-8  -*-
 """A setuptools based setup module."""
 
 from setuptools import setup, find_packages
@@ -40,4 +41,6 @@ setup(
     namespace_packages=['competitions'],
 
     test_suite='tests',
+
+    install_requires=['competitions-match>=0.1.2'],
 )
