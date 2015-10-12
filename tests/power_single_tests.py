@@ -34,6 +34,12 @@ class TestPowerOfTwoSingleEliminationCup(TestCase):
     def setUpClass(cls):
         config.base_match = 'competitions.test'
 
+    def test_default_team_list(self):
+        """Test the automatically generated default team list."""
+        cup = PowerOfTwoSingleEliminationCup(rounds=2)
+        list_of_teams = ['Team 1', 'Team 2', 'Team 3', 'Team 4']
+        self.assertListEqual(cup.teams, list_of_teams)
+
     def test_team_count_validation(self):
         """Test team count checking in constructor."""
         teams = ['Team' for __ in range(7)]
