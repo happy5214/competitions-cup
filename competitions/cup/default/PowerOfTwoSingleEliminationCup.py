@@ -18,8 +18,6 @@
 
 from __future__ import print_function, unicode_literals
 
-import StringIO
-
 from competitions.match import config
 
 
@@ -144,9 +142,7 @@ class PowerOfTwoSingleEliminationCup(object):
                     first_team = not first_team
                 else:
                     lines[i].append(space)
-        bracket = StringIO.StringIO()
-        for line in lines:
-            print(''.join(line), file=bracket)
+        bracket = '\n'.join([''.join(line) for line in lines])
         if display:
-            print(bracket.getvalue())
-        return bracket.getvalue()
+            print(bracket)
+        return bracket

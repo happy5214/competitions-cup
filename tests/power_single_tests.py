@@ -151,7 +151,6 @@ class TestPowerOfTwoSingleEliminationCup(TestCase):
             'Team 8                            0     '
             '                                        '
             '                                        '
-            '\n'
         )
         self.assertEqual(cup.print_cup(), expected_string,
                          'Wrong bracket printed.')
