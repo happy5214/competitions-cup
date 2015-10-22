@@ -1,6 +1,8 @@
 # -*- coding: utf-8  -*-
 """A setuptools based setup module."""
 
+from __future__ import unicode_literals
+
 from setuptools import setup, find_packages
 
 from codecs import open
@@ -13,7 +15,7 @@ with open(path.join(here, 'README.rst'), encoding='utf-8') as f:
 
 setup(
     name='competitions-cup',
-    version='0.1a1',
+    version='0.1rc1',
 
     description='Generic cup competitions',
     long_description=long_description,
