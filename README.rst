@@ -4,7 +4,7 @@ Generic cup competitions
 The goal of this package is to provide high-quality models of knockout cup
 competitions.
 
-The first version will include simple single-elimination cups for numbers of
+This first version includes simple single-elimination cups for numbers of
 teams that are powers of two (4, 8, 16, etc.).
 
 .. image:: https://travis-ci.org/happy5214/competitions-cup.svg?branch=master
