@@ -1,5 +1,5 @@
 # -*- coding: utf-8  -*-
-"""Cup package."""
+"""Tests for cup class registration and use."""
 
 # Copyright (C) 2015 Alexander Jones
 #
@@ -18,26 +18,22 @@
 
 from __future__ import unicode_literals
 
-import pkg_resources
+from . import TestCase
+
+from competitions.cup import CupConfig, config
+from competitions.cup.default.PowerOfTwoSingleEliminationCup import PowerOfTwoSingleEliminationCup
 
 
-class CupConfig(object):
+class TestCupRegistration(TestCase):
 
-    """Cup configuration singleton class."""
+    """Tests for cup class finding."""
 
-    created = False
+    def test_basic(self):
+        """Test loading of cup classes."""
+        self.assertEqual(config.cup('competitions.poweroftwo_single'),
+                         PowerOfTwoSingleEliminationCup)
+        self.assertRaises(KeyError, config.cup, 'competitions.unused')
 
-    def __init__(self):
-        """Constructor."""
-        if CupConfig.created:
-            raise RuntimeError
-        CupConfig.created = True
-        self._cup_types = {}
-        for cup in pkg_resources.iter_entry_points(group='competitions.cup.types'):
-            self._cup_types.update({cup.name: cup.load()})
-
-    def cup(self, name):
-        return self._cup_types[name]
-
-
-config = CupConfig()
+    def test_singleton(self):
+        """Test to ensure the configuration object's singleton status."""
+        self.assertRaises(RuntimeError, CupConfig)

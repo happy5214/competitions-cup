@@ -15,7 +15,7 @@ with open(path.join(here, 'README.rst'), encoding='utf-8') as f:
 
 setup(
     name='competitions-cup',
-    version='0.1rc1',
+    version='0.1rc2',
 
     description='Generic cup competitions',
     long_description=long_description,
@@ -45,4 +45,12 @@ setup(
     test_suite='tests',
 
     install_requires=['competitions-match>=0.1.2'],
+
+    entry_points={
+        'competitions.cup.types': [
+            ('competitions.poweroftwo_single = '
+             'competitions.cup.default.PowerOfTwoSingleEliminationCup:'
+             'PowerOfTwoSingleEliminationCup')
+        ]
+    },
 )
