@@ -72,3 +72,15 @@ class TestPowerOfTwoSingleEliminationCup(TestCase):
         self.assertEqual(new_teams[0], cup.matches[0][0].team1, 'First team not updated.')
         self.assertEqual(cup.matches[0][1].team1, 'New Special', 'New special team not updated.')
         self.assertNotEqual(cup.matches[0][2].team2, 'Special', 'Old special team not updated.')
+
+    def test_cup_results(self):
+        """Test the results of playing cup."""
+        teams = ['Team {}'.format(x + 1) for x in range(8)]
+        cup = PowerOfTwoSingleEliminationCup(rounds=3, teams=teams)
+        for i in range(6):
+            self.assertFalse(cup.play_match(), 'Cup ended early.')
+        self.assertTrue(cup.play_match(), 'Cup still has not ended.')
+        final_match = cup.matches[2][0]
+        self.assertEqual(final_match.team1, teams[0], 'First finalist is wrong.')
+        self.assertEqual(final_match.team2, teams[4], 'Second finalist is wrong.')
+        self.assertEqual(cup.winner, 'Team 1', 'Cup has wrong winner.')

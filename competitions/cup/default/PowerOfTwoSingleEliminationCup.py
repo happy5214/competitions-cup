@@ -21,9 +21,6 @@ from __future__ import print_function, unicode_literals
 from competitions.match import config
 
 
-Match = config.base_match
-
-
 class PowerOfTwoSingleEliminationCup(object):
     def __init__(self, rounds=0, teams=[]):
         """Constructor.
@@ -33,7 +30,10 @@ class PowerOfTwoSingleEliminationCup(object):
         @param teams: An optional list of teams
         @type teams: list
         """
+        Match = config.base_match
+
         self.index = [0, -1]
+        self.winner = None
         self.round_count = rounds
         self.team_count = 2 ** rounds
         if not teams:
@@ -84,6 +84,7 @@ class PowerOfTwoSingleEliminationCup(object):
             else:
                 next_match.team2 = winner
         except IndexError:
+            self.winner = winner
             return True
 
         return False
