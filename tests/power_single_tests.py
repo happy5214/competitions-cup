@@ -20,10 +20,13 @@ from __future__ import unicode_literals
 
 # import unittest
 
-from . import TestCase
+from . import TestCase, PY3
+
+if PY3:
+    unicode = str
 
 from competitions.match import config as match_config
-from competitions.cup import config as cup_config
+from competitions.cup import CupFinished, config as cup_config
 from competitions.cup.default.PowerOfTwoSingleEliminationCup import PowerOfTwoSingleEliminationCup
 
 
@@ -88,8 +91,8 @@ class TestPowerOfTwoSingleEliminationCup(TestCase):
         teams = ['Team {}'.format(x + 1) for x in range(8)]
         cup = CupClass(rounds=3, teams=teams)
         for i in range(6):
-            self.assertFalse(cup.play_match(), 'Cup ended early.')
-        self.assertTrue(cup.play_match(), 'Cup still has not ended.')
+            self.assertIsInstance(cup.play_match(), unicode, 'Cup ended early.')
+        self.assertRaises(CupFinished, cup.play_match)
         final_match = cup.matches[2][0]
         self.assertEqual(final_match.team1, teams[0], 'First finalist is wrong.')
         self.assertEqual(final_match.team2, teams[4], 'Second finalist is wrong.')

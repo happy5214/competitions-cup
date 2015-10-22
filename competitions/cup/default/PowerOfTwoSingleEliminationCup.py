@@ -19,9 +19,10 @@
 from __future__ import print_function, unicode_literals
 
 from competitions.match import config
+from competitions.cup import Cup, CupFinished
 
 
-class PowerOfTwoSingleEliminationCup(object):
+class PowerOfTwoSingleEliminationCup(Cup):
 
     """Standard single-elimination cup for powers of two (4, 8, 16, etc.)."""
 
@@ -33,20 +34,13 @@ class PowerOfTwoSingleEliminationCup(object):
         @param teams: An optional list of teams
         @type teams: list
         """
+        super(PowerOfTwoSingleEliminationCup, self).__init__(teams=teams,
+                                                             team_count=2 ** rounds)
         Match = config.base_match
 
         self.index = [0, -1]
-        self.winner = None
         self.round_count = rounds
-        self.team_count = 2 ** rounds
-        if not teams:
-            self.teams = list(map(lambda x: 'Team ' + str(x),
-                                  range(1, self.team_count + 1)))
-        else:
-            if len(teams) != self.team_count:
-                raise ValueError('Wrong number of teams')
-            self.teams = teams
-        self.matches = []
+
         match_count = self.team_count // 2
         self.matches.append([Match(self.teams[i * 2], self.teams[i * 2 + 1])
                              for i in range(match_count)])
@@ -60,17 +54,11 @@ class PowerOfTwoSingleEliminationCup(object):
                 match_num += 2
             self.matches.append(round)
 
-    def play_cup(self):
-        """Play the whole cup."""
-        while not self.play_match():
-            pass
-        return self.winner
-
     def play_match(self):
         """Play a cup match.
 
-        @return: Whether the cup has concluded
-        @rtype: bool
+        @return: The winner of the simulated match
+        @raise CupFinished: If the cup is finished
         """
         self.index[1] += 1
         round = self.matches[self.index[0]]
@@ -94,9 +82,9 @@ class PowerOfTwoSingleEliminationCup(object):
                 next_match.team2 = winner
         except IndexError:
             self.winner = winner
-            return True
+            raise CupFinished(winner)
 
-        return False
+        return winner
 
     def update_teams(self, teams):
         """Update the list of teams and the first-round matches.

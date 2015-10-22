@@ -21,6 +21,89 @@ from __future__ import unicode_literals
 import pkg_resources
 
 
+class Cup(object):
+
+    """Base class for knockout cups."""
+
+    def __init__(self, team_count, teams=[]):
+        """Constructor.
+
+        @param team_count: The expected number of teams
+        @type team_count: int
+        @param teams: The teams in this cup
+        @type teams: list
+        @raise ValueError: If the list of teams has the wrong number of teams
+        """
+        self.winner = None
+        self.matches = []
+        if not teams:
+            self.teams = list(map(lambda x: 'Team ' + str(x),
+                                  range(1, team_count + 1)))
+        else:
+            self.teams = teams
+        if len(self.teams) != team_count:
+            raise ValueError('Wrong number of teams')
+
+    @property
+    def team_count(self):
+        """The number of teams in this cup."""
+        return len(self.teams)
+
+    def play_cup(self):
+        """Play the whole cup.
+
+        @return: The winner of the cup
+        """
+        try:
+            while True:
+                self.play_match()
+        except CupFinished as e:
+            return e.winner
+
+    def play_match(self):
+        """Play a cup match.
+
+        @return: The winner of the simulated match
+        @raise CupFinished: If the cup is finished
+        """
+        raise NotImplementedError
+
+    def update_teams(self, teams):
+        """Update the list of teams and the first-round matches.
+
+        @param teams: The new list of teams
+        @type teams: list
+        """
+        raise NotImplementedError
+
+    def print_cup(self, display=True):
+        """Print the cup to a string and (optionally) the console.
+
+        @param display: Whether to print to the console.
+        @type display: bool
+        @return: The displayed bracket
+        @rtype: str
+        """
+        raise NotImplementedError
+
+
+class CupFinished(RuntimeError):
+
+    """Exception for cup simulating its final match.
+
+    This exception signals that the cup is over and that no more matches can be
+    simulated. The consumer of the cup object should note the winner and move on.
+    """
+
+    def __init__(self, winner):
+        """Constructor.
+
+        @param winner: The winner of the cup
+        @type winner: The type of teams in the cup
+        """
+        self.winner = winner
+
+
 class CupConfig(object):
 
     """Cup configuration singleton class."""
@@ -36,8 +119,16 @@ class CupConfig(object):
         for cup in pkg_resources.iter_entry_points(group='competitions.cup.types'):
             self._cup_types.update({cup.name: cup.load()})
 
-    def cup(self, name):
-        return self._cup_types[name]
+    def cup(self, code):
+        """Retrieve the cup referred to by this code.
+
+        @param code: The code for the cup class
+        @type code: str
+        @return: The cup class for the provided code.
+        @rtype: Cup
+        @raise KeyError: If there is no cup class loaded for this code
+        """
+        return self._cup_types[code]
 
 
 config = CupConfig()
