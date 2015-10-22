@@ -18,6 +18,8 @@
 
 from __future__ import print_function, unicode_literals
 
+import StringIO
+
 from competitions.match import config
 
 
@@ -59,6 +61,12 @@ class PowerOfTwoSingleEliminationCup(object):
                                    'Match {} Winner'.format(match_num + 1)))
                 match_num += 2
             self.matches.append(round)
+
+    def play_cup(self):
+        """Play the whole cup."""
+        while not self.play_match():
+            pass
+        return self.winner
 
     def play_match(self):
         """Play a cup match.
@@ -104,8 +112,14 @@ class PowerOfTwoSingleEliminationCup(object):
             first_round[x].team1 = self.teams[x * 2]
             first_round[x].team2 = self.teams[x * 2 + 1]
 
-    def print_cup(self):
-        """Print the cup to the console."""
+    def print_cup(self, display=True):
+        """Print the cup to a string and (optionally) the console.
+
+        @param display: Whether to print to the console.
+        @type display: bool
+        @return: The displayed bracket
+        @rtype: str
+        """
         space = ' ' * 40
         line_count = self.team_count * 2 - 1
         lines = [[] for __ in range(line_count)]
@@ -130,5 +144,9 @@ class PowerOfTwoSingleEliminationCup(object):
                     first_team = not first_team
                 else:
                     lines[i].append(space)
+        bracket = StringIO.StringIO()
         for line in lines:
-            print(''.join(line))
+            print(''.join(line), file=bracket)
+        if display:
+            print(bracket.getvalue())
+        return bracket.getvalue()

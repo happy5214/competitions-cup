@@ -85,3 +85,73 @@ class TestPowerOfTwoSingleEliminationCup(TestCase):
         self.assertEqual(final_match.team1, teams[0], 'First finalist is wrong.')
         self.assertEqual(final_match.team2, teams[4], 'Second finalist is wrong.')
         self.assertEqual(cup.winner, 'Team 1', 'Cup has wrong winner.')
+
+    def test_cup_printout(self):
+        """Test the printout of the cup when completed."""
+        teams = ['Team {}'.format(x + 1) for x in range(8)]
+        cup = PowerOfTwoSingleEliminationCup(rounds=3, teams=teams)
+        cup.play_cup()
+        expected_string = (
+            'Team 1                            5     '
+            '                                        '
+            '                                        '
+            '\n'
+            '                                        '
+            'Team 1                            5     '
+            '                                        '
+            '\n'
+            'Team 2                            0     '
+            '                                        '
+            '                                        '
+            '\n'
+            '                                        '
+            '                                        '
+            'Team 1                            5     '
+            '\n'
+            'Team 3                            5     '
+            '                                        '
+            '                                        '
+            '\n'
+            '                                        '
+            'Team 3                            0     '
+            '                                        '
+            '\n'
+            'Team 4                            0     '
+            '                                        '
+            '                                        '
+            '\n'
+            '                                        '
+            '                                        '
+            '                                        '
+            '\n'
+            'Team 5                            5     '
+            '                                        '
+            '                                        '
+            '\n'
+            '                                        '
+            'Team 5                            5     '
+            '                                        '
+            '\n'
+            'Team 6                            0     '
+            '                                        '
+            '                                        '
+            '\n'
+            '                                        '
+            '                                        '
+            'Team 5                            0     '
+            '\n'
+            'Team 7                            5     '
+            '                                        '
+            '                                        '
+            '\n'
+            '                                        '
+            'Team 7                            0     '
+            '                                        '
+            '\n'
+            'Team 8                            0     '
+            '                                        '
+            '                                        '
+            '\n'
+        )
+        self.assertEqual(cup.print_cup(), expected_string,
+                         'Wrong bracket printed.')
