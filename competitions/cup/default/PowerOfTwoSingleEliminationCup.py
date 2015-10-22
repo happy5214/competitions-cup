@@ -22,6 +22,9 @@ from competitions.match import config
 
 
 class PowerOfTwoSingleEliminationCup(object):
+
+    """Standard single-elimination cup for powers of two (4, 8, 16, etc.)."""
+
     def __init__(self, rounds=0, teams=[]):
         """Constructor.
 

@@ -32,6 +32,7 @@ class TestPowerOfTwoSingleEliminationCup(TestCase):
 
     @classmethod
     def setUpClass(cls):
+        """Class setup code."""
         config.base_match = 'competitions.test'
 
     def test_default_team_list(self):
