@@ -13,7 +13,7 @@ with open(path.join(here, 'README.rst'), encoding='utf-8') as f:
 
 setup(
     name='competitions-cup',
-    version='0.1.1',
+    version='0.2',
 
     description='Generic cup competitions',
     long_description=long_description,
@@ -48,7 +48,10 @@ setup(
         'competitions.cup.types': [
             ('competitions.poweroftwo_single = '
              'competitions.cup.default.PowerOfTwoSingleEliminationCup:'
-             'PowerOfTwoSingleEliminationCup')
+             'PowerOfTwoSingleEliminationCup'),
+            ('competitions.stepladder = '
+             'competitions.cup.default.StepladderCup:'
+             'StepladderCup')
         ]
     },
 )
