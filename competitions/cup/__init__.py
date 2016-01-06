@@ -21,7 +21,25 @@ from __future__ import unicode_literals
 import pkg_resources
 
 
-class Cup(object):
+class Bracket(object):
+
+    """Base class for tournament brackets."""
+
+    def __init__(self):
+        """Constructor."""
+        self.winner = None
+        self.matches = []
+
+    def play_match(self):
+        """Play a cup match.
+
+        @return: The winner of the simulated match
+        @raise CupFinished: If the cup is finished
+        """
+        raise NotImplementedError
+
+
+class Cup(Bracket):
 
     """Base class for knockout cups."""
 
@@ -34,8 +52,7 @@ class Cup(object):
         @type teams: list
         @raise ValueError: If the list of teams has the wrong number of teams
         """
-        self.winner = None
-        self.matches = []
+        super(Cup, self).__init__()
         if not teams:
             self.teams = list(map(lambda x: 'Team ' + str(x),
                                   range(1, team_count + 1)))
@@ -59,14 +76,6 @@ class Cup(object):
                 self.play_match()
         except CupFinished as e:
             return e.winner
-
-    def play_match(self):
-        """Play a cup match.
-
-        @return: The winner of the simulated match
-        @raise CupFinished: If the cup is finished
-        """
-        raise NotImplementedError
 
     def update_teams(self, teams):
         """Update the list of teams and the first-round matches.
