@@ -1,7 +1,7 @@
 # -*- coding: utf-8  -*-
 """Losers bracket for a double-elimination cup for powers of two."""
 
-# Copyright (C) 2015 Alexander Jones
+# Copyright (C) 2016 Alexander Jones
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Lesser General Public License as published
@@ -18,11 +18,11 @@
 
 from __future__ import print_function, unicode_literals
 
-from competitions.cup import CupFinished
+from competitions.cup import Bracket, CupFinished
 from competitions.match import config
 
 
-class PowerOfTwoLosersBracket(object):
+class PowerOfTwoLosersBracket(Bracket):
 
     """Double-elimination cup losers bracket for powers of two (4, 8, 16, etc.)."""
 
@@ -32,12 +32,19 @@ class PowerOfTwoLosersBracket(object):
         @param rounds: The number of rounds in the corresponding winners bracket
         @type rounds: int
         """
-        Match = config.base_match
+        super(PowerOfTwoLosersBracket, self).__init__()  # Parent constructor
 
+        # Parameter validation
+        if rounds < 2:
+            raise ValueError('Not enough rounds.')
+
+        Match = config.base_match  # Load match class
+
+        # Object constants
         self.index = [0, -1]
-        self.round_count = (rounds - 1) // 2
+        self.round_count = (rounds - 1) * 2
 
-        self.matches = []
+        # Build bracket
         match_count = 2 ** (rounds - 2)
         self.matches.append([Match("Match {} Loser".format(2 * i + 1),
                                    "Match {} Loser".format(2 * i + 2))
@@ -62,6 +69,7 @@ class PowerOfTwoLosersBracket(object):
                                    'Match L{} Winner'.format(losers_match_num + 1)))
                 losers_match_num += 2
             self.matches.append(round)
+        self._generate_loser_placements()
 
     def _generate_winner_nums(self, rounds):
         """Generate the list of winners bracket match numbers.
@@ -78,6 +86,20 @@ class PowerOfTwoLosersBracket(object):
         del match_nums[-2]
         return match_nums
 
+    def _generate_loser_placements(self):
+        """Generate the placements for winners bracket losers."""
+        phases = self.round_count // 2
+        placements = []
+        for phase in range(phases):
+            pairs = 2 ** max(phases - phase - 2, 0)
+            for pair in range(pairs):
+                placements.append(((phase * 2 + 1), (pair * 2 + 1)))
+                placements.append(((phase * 2 + 1), (pair * 2)))
+        del placements[-2]
+        self._loser_placements = placements
+        self._current_loser_placement = self._first_round_loser_placement = 0
+        self._first_round_teams = len(placements) + 1
+
     def play_match(self):
         """Play a cup match.
 
@@ -86,7 +108,6 @@ class PowerOfTwoLosersBracket(object):
         """
         self.index[1] += 1
         round = self.matches[self.index[0]]
-        is_minor = self.index[0] % 2 == 0
         match = None
         try:
             match = round[self.index[1]]
@@ -94,13 +115,13 @@ class PowerOfTwoLosersBracket(object):
             self.index[0] += 1
             self.index[1] = 0
             round = self.matches[self.index[0]]
-            is_minor = self.index[0] % 2 == 0
             match = round[0]
         winner = None
         while not winner:
             match.play()
             winner = match.winner
         try:
+            is_minor = self.index[0] % 2 == 0
             if is_minor:
                 next_match = self.matches[self.index[0] + 1][self.index[1]]
                 next_match.team2 = winner
@@ -115,3 +136,23 @@ class PowerOfTwoLosersBracket(object):
             raise CupFinished(winner)
 
         return winner
+
+    def add_team(self, team):
+        """Add a loser from the winners bracket to the losers bracket.
+
+        @param team: The team to add
+        @type team: A str or team-like object
+        """
+        if self._first_round_loser_placement < self._first_round_teams:
+            index = self._first_round_loser_placement
+            match = self.matches[0][index // 2]
+            if index % 2 == 0:
+                match.team1 = team
+            else:
+                match.team2 = team
+            self._first_round_loser_placement += 1
+        else:
+            position = self._loser_placements[self._current_loser_placement]
+            match = self.matches[position[0]][position[1]]
+            match.team1 = team
+            self._current_loser_placement += 1
