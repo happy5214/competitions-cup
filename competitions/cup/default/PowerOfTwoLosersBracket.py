@@ -42,7 +42,9 @@ class PowerOfTwoLosersBracket(Bracket):
 
         # Object constants
         self.index = [0, -1]
-        self.round_count = (rounds - 1) * 2
+        self.winners_round_count = rounds
+        self.phases = rounds - 1
+        self.round_count = self.phases * 2
 
         # Build bracket
         match_count = 2 ** (rounds - 2)
@@ -88,10 +90,9 @@ class PowerOfTwoLosersBracket(Bracket):
 
     def _generate_loser_placements(self):
         """Generate the placements for winners bracket losers."""
-        phases = self.round_count // 2
         placements = []
-        for phase in range(phases):
-            pairs = 2 ** max(phases - phase - 2, 0)
+        for phase in range(self.phases):
+            pairs = 2 ** max(self.phases - phase - 2, 0)
             for pair in range(pairs):
                 placements.append(((phase * 2 + 1), (pair * 2 + 1)))
                 placements.append(((phase * 2 + 1), (pair * 2)))
@@ -156,3 +157,72 @@ class PowerOfTwoLosersBracket(Bracket):
             match = self.matches[position[0]][position[1]]
             match.team1 = team
             self._current_loser_placement += 1
+
+    def print_cup(self, display=True):
+        """Print the cup to a string and (optionally) the console.
+
+        @param display: Whether to print to the console.
+        @type display: bool
+        @return: The displayed bracket
+        @rtype: str
+        """
+        space = ' ' * 40
+        first = 2 ** (self.phases - 1)
+        line_count = first * 5 - 1
+        lines = [[] for __ in range(line_count)]
+        first_team = True
+        for phase in range(self.phases):
+            first = 2 ** (self.phases - 1)
+            match_num = 0
+            round = phase * 2
+            div = 2 * 2 ** phase
+            for i in range(first):
+                lines[i].append(space)
+            for i in range(first, line_count):
+                if (i - first) % div == 0:
+                    try:
+                        if first_team:
+                            lines[i].append('{:<30}'.format(self.matches[round][match_num].team1) +
+                                            ' ' +
+                                            '{:>4}'.format(self.matches[round][match_num].score1) +
+                                            ' ' * 5)
+                        else:
+                            lines[i].append('{:<30}'.format(self.matches[round][match_num].team2) +
+                                            ' ' +
+                                            '{:>4}'.format(self.matches[round][match_num].score2) +
+                                            ' ' * 5)
+                            match_num += 1
+                        first_team = not first_team
+                    except IndexError:
+                        lines[i].append(space)
+                else:
+                    lines[i].append(space)
+            # Major round
+            match_num = 0
+            first -= 2 ** phase
+            round += 1
+            for i in range(first):
+                lines[i].append(space)
+            for i in range(first, line_count):
+                if (i - first) % div == 0:
+                    try:
+                        if first_team:
+                            lines[i].append('{:<30}'.format(self.matches[round][match_num].team1) +
+                                            ' ' +
+                                            '{:>4}'.format(self.matches[round][match_num].score1) +
+                                            ' ' * 5)
+                        else:
+                            lines[i].append('{:<30}'.format(self.matches[round][match_num].team2) +
+                                            ' ' +
+                                            '{:>4}'.format(self.matches[round][match_num].score2) +
+                                            ' ' * 5)
+                            match_num += 1
+                        first_team = not first_team
+                    except IndexError:
+                        lines[i].append(space)
+                else:
+                    lines[i].append(space)
+        bracket = '\n'.join([''.join(line) for line in lines])
+        if display:
+            print(bracket)
+        return bracket

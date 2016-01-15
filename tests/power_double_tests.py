@@ -21,6 +21,7 @@ from __future__ import unicode_literals
 # import unittest
 
 from . import TestCase, PY3
+from competitions.cup import CupFinished
 
 if PY3:
     unicode = str
@@ -48,3 +49,63 @@ class TestPowerOfTwoLosersBracket(TestCase):
             bracket = PowerOfTwoLosersBracket(rounds=rounds)
             self.assertEqual(len(bracket.matches), ((rounds - 1) * 2),
                              "{}-team bracket has wrong number of rounds.".format(2 ** rounds))
+
+    def test_cup_printout(self):
+        """Test the printout of the cup when completed."""
+        teams = ['Team {}'.format(x + 1) for x in range(7)]
+        bracket = PowerOfTwoLosersBracket(rounds=3)
+        for team in teams:
+            bracket.add_team(team)
+        try:
+            while True:
+                bracket.play_match()
+        except CupFinished:
+            pass
+        expected_string = (
+            '                                        '
+            '                                        '
+            '                                        '
+            'Team 7                            5     '
+            '\n'
+            '                                        '
+            'Team 6                            5     '
+            '                                        '
+            '                                        '
+            '\n'
+            'Team 1                            5     '
+            '                                        '
+            'Team 6                            5     '
+            '                                        '
+            '\n'
+            '                                        '
+            'Team 1                            0     '
+            '                                        '
+            '                                        '
+            '\n'
+            'Team 2                            0     '
+            '                                        '
+            '                                        '
+            'Team 6                            0     '
+            '\n'
+            '                                        '
+            'Team 5                            5     '
+            '                                        '
+            '                                        '
+            '\n'
+            'Team 3                            5     '
+            '                                        '
+            'Team 5                            0     '
+            '                                        '
+            '\n'
+            '                                        '
+            'Team 3                            0     '
+            '                                        '
+            '                                        '
+            '\n'
+            'Team 4                            0     '
+            '                                        '
+            '                                        '
+            '                                        '
+        )
+        self.assertEqual(bracket.print_cup(display=False), expected_string,
+                         'Wrong bracket printed.')
