@@ -106,6 +106,19 @@ class TestPowerOfTwoDoubleEliminationCup(TestCase):
         self.assertEqual(final_match.team2, teams[4], 'Second finalist is wrong.')
         self.assertEqual(cup.winner, 'Team 1', 'Cup has wrong winner.')
 
+    def test_replay(self):
+        """Test replaying the final depending on the winner."""
+        teams = ['Team {}'.format(x + 1) for x in range(8)]
+        cup = CupClass(rounds=3, teams=teams)
+        for i in range(13):
+            self.assertIsInstance(cup.play_match(), unicode, 'Cup ended early.')
+        cup.final.team1, cup.final.team2 = cup.final.team2, cup.final.team1
+        self.assertRaises(CupFinished, cup.play_match)
+        final_match = cup.final
+        self.assertEqual(final_match.team1, teams[4], 'Flipped first finalist is wrong.')
+        self.assertEqual(final_match.team2, teams[0], 'Flipped second finalist is wrong.')
+        self.assertEqual(cup.winner, 'Team 5', 'Cup has wrong winner.')
+
     def test_cup_printout(self):
         """Test the printout of the cup when completed."""
         teams = ['Team {}'.format(x + 1) for x in range(8)]
@@ -226,7 +239,7 @@ class TestPowerOfTwoDoubleEliminationCup(TestCase):
             'Team 5                            0          '
             '                                             '
         )
-        self.assertEqual(cup.print_cup(display=False), expected_string,
+        self.assertEqual(cup.print_cup(), expected_string,
                          'Wrong bracket printed.')
 
 
@@ -241,6 +254,7 @@ class TestPowerOfTwoLosersBracket(TestCase):
 
     def test_round_count(self):
         """Test the bracket's round count."""
+        self.assertRaises(ValueError, PowerOfTwoLosersBracket, rounds=1)
         for rounds in range(2, 6):
             bracket = PowerOfTwoLosersBracket(rounds=rounds)
             self.assertEqual(len(bracket.matches), ((rounds - 1) * 2),
@@ -317,5 +331,5 @@ class TestPowerOfTwoLosersBracket(TestCase):
             '                                        '
             '                                        '
         )
-        self.assertEqual(bracket.print_cup(display=False), expected_string,
+        self.assertEqual(bracket.print_cup(), expected_string,
                          'Wrong bracket printed.')
