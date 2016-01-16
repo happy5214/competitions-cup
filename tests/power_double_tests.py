@@ -50,8 +50,22 @@ class TestPowerOfTwoLosersBracket(TestCase):
             self.assertEqual(len(bracket.matches), ((rounds - 1) * 2),
                              "{}-team bracket has wrong number of rounds.".format(2 ** rounds))
 
-    def test_cup_printout(self):
-        """Test the printout of the cup when completed."""
+    def test_bracket_results(self):
+        """Test the results of playing losers bracket."""
+        teams = ['Team {}'.format(x + 1) for x in range(7)]
+        bracket = PowerOfTwoLosersBracket(rounds=3)
+        for team in teams:
+            bracket.add_team(team)
+        for i in range(5):
+            self.assertIsInstance(bracket.play_match(), unicode, 'Cup ended early.')
+        self.assertRaises(CupFinished, bracket.play_match)
+        final_match = bracket.matches[3][0]
+        self.assertEqual(final_match.team1, teams[6], 'First finalist is wrong.')
+        self.assertEqual(final_match.team2, teams[5], 'Second finalist is wrong.')
+        self.assertEqual(bracket.winner, 'Team 7', 'Cup has wrong winner.')
+
+    def test_bracket_printout(self):
+        """Test the printout of the losers bracket when completed."""
         teams = ['Team {}'.format(x + 1) for x in range(7)]
         bracket = PowerOfTwoLosersBracket(rounds=3)
         for team in teams:
