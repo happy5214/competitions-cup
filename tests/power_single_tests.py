@@ -22,12 +22,12 @@ from __future__ import unicode_literals
 
 from . import TestCase, PY3
 
-if PY3:
-    unicode = str
-
 from competitions.match import config as match_config
 from competitions.cup import CupFinished, config as cup_config
 from competitions.cup.default.PowerOfTwoSingleEliminationCup import PowerOfTwoSingleEliminationCup
+
+if PY3:
+    unicode = str
 
 
 CupClass = cup_config.cup('competitions.poweroftwo_single')
