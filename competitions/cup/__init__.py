@@ -29,6 +29,7 @@ class Bracket(object):
         """Constructor."""
         self.winner = None
         self.matches = []
+        self.index = [0, -1]
 
     def play_match(self):
         """Play a cup match.
@@ -37,6 +38,10 @@ class Bracket(object):
         @raise CupFinished: If the cup is finished
         """
         raise NotImplementedError
+
+    @property
+    def round_over(self):
+        return (self.index[1] + 1) >= len(self.matches[self.index[0]])
 
 
 class Cup(Bracket):

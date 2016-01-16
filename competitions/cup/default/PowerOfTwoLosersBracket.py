@@ -41,7 +41,6 @@ class PowerOfTwoLosersBracket(Bracket):
         Match = config.base_match  # Load match class
 
         # Object constants
-        self.index = [0, -1]
         self.winners_round_count = rounds
         self.phases = rounds - 1
         self.round_count = self.phases * 2
@@ -117,6 +116,7 @@ class PowerOfTwoLosersBracket(Bracket):
             self.index[1] = 0
             round = self.matches[self.index[0]]
             match = round[0]
+        self.current_match = match
         winner = None
         while not winner:
             match.play()
@@ -224,5 +224,6 @@ class PowerOfTwoLosersBracket(Bracket):
                     lines[i].append(space)
         bracket = '\n'.join([''.join(line) for line in lines])
         if display:
+            print()
             print(bracket)
         return bracket

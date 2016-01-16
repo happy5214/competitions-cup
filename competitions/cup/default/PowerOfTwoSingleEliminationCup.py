@@ -38,7 +38,6 @@ class PowerOfTwoSingleEliminationCup(Cup):
                                                              team_count=2 ** rounds)
         Match = config.base_match
 
-        self.index = [0, -1]
         self.round_count = rounds
 
         match_count = self.team_count // 2
@@ -70,6 +69,7 @@ class PowerOfTwoSingleEliminationCup(Cup):
             self.index[1] = 0
             round = self.matches[self.index[0]]
             match = round[0]
+        self.current_match = match
         winner = None
         while not winner:
             match.play()
