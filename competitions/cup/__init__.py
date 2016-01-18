@@ -41,6 +41,11 @@ class Bracket(object):
 
     @property
     def round_over(self):
+        """Whether the current round is over.
+
+        @return: Whether the current round is over
+        @rtype: bool
+        """
         return (self.index[1] + 1) >= len(self.matches[self.index[0]])
 
 

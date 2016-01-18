@@ -4,9 +4,14 @@ Generic cup competitions
 The goal of this package is to provide high-quality models of knockout cup
 competitions.
 
-Currently, this package models standard single-elimination brackets for
-team counts that are powers of two (4, 8, 16, etc.) and stepladder-style
+Currently, this package models standard single- and double-elimination brackets
+for team counts that are powers of two (4, 8, 16, etc.) and stepladder-style
 brackets for any number of teams.
+
+Changes in v0.3
+---------------
+
+- Double-elimination brackets for powers of two (4, 8, 16, etc.)
 
 Changes in v0.2
 ---------------
