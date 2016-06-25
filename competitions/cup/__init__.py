@@ -48,6 +48,28 @@ class Bracket(object):
         """
         return (self.index[1] + 1) >= len(self.matches[self.index[0]])
 
+    def _bracket_match_str(self, line, round_num, match_num, first_team):
+        """Generate the string for a match to place in a printed bracket.
+
+        @param line: The line to append the string to
+        @type line: list
+        @param round_num: The round number in self.matches
+        @type round_num: int
+        @param match_num: The match number for the round in self.matches
+        @type match_num: int
+        @param first_team: Whether to return the string for the first team
+        @type first_team: bool
+        @return: 0 if first_team is True, 1 otherwise
+        @rtype: int
+        """
+        match = self.matches[round_num][match_num]
+        if first_team:
+            team, score = match.team1, match.score1
+        else:
+            team, score = match.team2, match.score2
+        line.append('{:<30} {:>4}     '.format(team, score))
+        return 0 if first_team else 1
+
 
 class Cup(Bracket):
 

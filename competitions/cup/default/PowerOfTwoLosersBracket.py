@@ -180,17 +180,8 @@ class PowerOfTwoLosersBracket(Bracket):
                 lines[i].append(space)
             for i in range(first, line_count):
                 if (i - first) % div == 0:
-                    if first_team:
-                        lines[i].append('{:<30}'.format(self.matches[round][match_num].team1) +
-                                        ' ' +
-                                        '{:>4}'.format(self.matches[round][match_num].score1) +
-                                        ' ' * 5)
-                    else:
-                        lines[i].append('{:<30}'.format(self.matches[round][match_num].team2) +
-                                        ' ' +
-                                        '{:>4}'.format(self.matches[round][match_num].score2) +
-                                        ' ' * 5)
-                        match_num += 1
+                    match_num += self._bracket_match_str(lines[i], round,
+                                                         match_num, first_team)
                     first_team = not first_team
                 else:
                     lines[i].append(space)
@@ -203,17 +194,9 @@ class PowerOfTwoLosersBracket(Bracket):
             for i in range(first, line_count):
                 if (i - first) % div == 0:
                     try:
-                        if first_team:
-                            lines[i].append('{:<30}'.format(self.matches[round][match_num].team1) +
-                                            ' ' +
-                                            '{:>4}'.format(self.matches[round][match_num].score1) +
-                                            ' ' * 5)
-                        else:
-                            lines[i].append('{:<30}'.format(self.matches[round][match_num].team2) +
-                                            ' ' +
-                                            '{:>4}'.format(self.matches[round][match_num].score2) +
-                                            ' ' * 5)
-                            match_num += 1
+                        match_num += self._bracket_match_str(lines[i], round,
+                                                             match_num,
+                                                             first_team)
                         first_team = not first_team
                     except IndexError:
                         lines[i].append(space)

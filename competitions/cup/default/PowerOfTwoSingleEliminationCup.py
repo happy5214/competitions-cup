@@ -116,17 +116,8 @@ class PowerOfTwoSingleEliminationCup(Cup):
             mod = div // 2 - 1
             for i in range(line_count):
                 if i % div == mod:
-                    if first_team:
-                        lines[i].append('{:<30}'.format(self.matches[round][match_num].team1) +
-                                        ' ' +
-                                        '{:>4}'.format(self.matches[round][match_num].score1) +
-                                        ' ' * 5)
-                    else:
-                        lines[i].append('{:<30}'.format(self.matches[round][match_num].team2) +
-                                        ' ' +
-                                        '{:>4}'.format(self.matches[round][match_num].score2) +
-                                        ' ' * 5)
-                        match_num += 1
+                    match_num += self._bracket_match_str(lines[i], round,
+                                                         match_num, first_team)
                     first_team = not first_team
                 else:
                     lines[i].append(space)
