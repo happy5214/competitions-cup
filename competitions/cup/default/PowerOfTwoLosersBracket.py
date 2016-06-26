@@ -171,6 +171,7 @@ class PowerOfTwoLosersBracket(Bracket):
         line_count = first * 5 - 1
         lines = [[] for __ in range(line_count)]
         first_team = True
+        team_str = self._bracket_match_str
         for phase in range(self.phases):
             first = 2 ** (self.phases - 1)
             match_num = 0
@@ -179,12 +180,9 @@ class PowerOfTwoLosersBracket(Bracket):
             for i in range(first):
                 lines[i].append(space)
             for i in range(first, line_count):
-                if (i - first) % div == 0:
-                    match_num += self._bracket_match_str(lines[i], round,
-                                                         match_num, first_team)
-                    first_team = not first_team
-                else:
-                    lines[i].append(space)
+                (match_num, first_team) = team_str(((i - first) % div == 0),
+                                                   lines[i], round, match_num,
+                                                   first_team)
             # Major round
             match_num = 0
             first -= 2 ** phase
@@ -192,15 +190,11 @@ class PowerOfTwoLosersBracket(Bracket):
             for i in range(first):
                 lines[i].append(space)
             for i in range(first, line_count):
-                if (i - first) % div == 0:
-                    try:
-                        match_num += self._bracket_match_str(lines[i], round,
-                                                             match_num,
-                                                             first_team)
-                        first_team = not first_team
-                    except IndexError:
-                        lines[i].append(space)
-                else:
+                try:
+                    (match_num, first_team) = team_str(((i - first) % div == 0),
+                                                       lines[i], round,
+                                                       match_num, first_team)
+                except IndexError:
                     lines[i].append(space)
         bracket = '\n'.join([''.join(line) for line in lines])
         if display:

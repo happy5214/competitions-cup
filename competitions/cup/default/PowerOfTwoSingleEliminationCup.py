@@ -106,21 +106,18 @@ class PowerOfTwoSingleEliminationCup(Cup):
         @return: The displayed bracket
         @rtype: str
         """
-        space = ' ' * 40
         line_count = self.team_count * 2 - 1
         lines = [[] for __ in range(line_count)]
         first_team = True
+        team_str = self._bracket_match_str
         for round in range(self.round_count):
             match_num = 0
             div = 2 * 2 ** round
             mod = div // 2 - 1
             for i in range(line_count):
-                if i % div == mod:
-                    match_num += self._bracket_match_str(lines[i], round,
-                                                         match_num, first_team)
-                    first_team = not first_team
-                else:
-                    lines[i].append(space)
+                (match_num, first_team) = team_str((i % div == mod), lines[i],
+                                                   round, match_num,
+                                                   first_team)
         bracket = '\n'.join([''.join(line) for line in lines])
         if display:
             print(bracket)
