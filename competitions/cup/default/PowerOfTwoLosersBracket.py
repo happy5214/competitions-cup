@@ -196,6 +196,4 @@ class PowerOfTwoLosersBracket(StandardBracket):
                                                        match_num, first_team)
                 except IndexError:
                     lines[i].append(space)
-        if display:
-            print()
         return self._actually_print_bracket(lines, display)
