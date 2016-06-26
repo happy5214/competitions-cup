@@ -48,6 +48,11 @@ class Bracket(object):
         """
         return (self.index[1] + 1) >= len(self.matches[self.index[0]])
 
+
+class PrintableBracket(Bracket):
+
+    """Mixin for a bracket printable to the console."""
+
     def _bracket_match_str(self, test, line, round_num, match_num, first_team):
         """Generate the string for a match to place in a printed bracket.
 
@@ -77,6 +82,19 @@ class Bracket(object):
         else:
             line.append(' ' * 40)
             return (match_num, first_team)
+
+    def _actually_print_bracket(self, lines, display):
+        bracket = '\n'.join([''.join(line) for line in lines])
+        if display:
+            print(bracket)
+        return bracket
+
+
+class StandardBracket(PrintableBracket):
+
+    """A standard bracket."""
+
+    pass
 
 
 class Cup(Bracket):
@@ -125,6 +143,11 @@ class Cup(Bracket):
         """
         raise NotImplementedError
 
+
+class PrintableCup(Cup, PrintableBracket):
+
+    """Combo class for a full cup printable to the console."""
+
     def print_cup(self, display=True):
         """Print the cup to a string and (optionally) the console.
 
@@ -134,6 +157,13 @@ class Cup(Bracket):
         @rtype: str
         """
         raise NotImplementedError
+
+
+class StandardCup(PrintableCup):
+
+    """A standard cup."""
+
+    pass
 
 
 class CupFinished(RuntimeError):

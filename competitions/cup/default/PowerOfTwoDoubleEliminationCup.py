@@ -19,12 +19,12 @@
 from __future__ import print_function, unicode_literals
 
 from competitions.match import config
-from competitions.cup import Cup, CupFinished
+from competitions.cup import StandardCup, CupFinished
 from competitions.cup.default.PowerOfTwoLosersBracket import PowerOfTwoLosersBracket
 from competitions.cup.default.PowerOfTwoSingleEliminationCup import PowerOfTwoSingleEliminationCup
 
 
-class PowerOfTwoDoubleEliminationCup(Cup):
+class PowerOfTwoDoubleEliminationCup(StandardCup):
 
     """Standard double-elimination cup for powers of two (4, 8, 16, etc.)."""
 

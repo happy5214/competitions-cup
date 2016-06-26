@@ -19,10 +19,10 @@
 from __future__ import print_function, unicode_literals
 
 from competitions.match import config
-from competitions.cup import Cup, CupFinished
+from competitions.cup import StandardCup, CupFinished
 
 
-class PowerOfTwoSingleEliminationCup(Cup):
+class PowerOfTwoSingleEliminationCup(StandardCup):
 
     """Standard single-elimination cup for powers of two (4, 8, 16, etc.)."""
 
@@ -118,7 +118,4 @@ class PowerOfTwoSingleEliminationCup(Cup):
                 (match_num, first_team) = team_str((i % div == mod), lines[i],
                                                    round, match_num,
                                                    first_team)
-        bracket = '\n'.join([''.join(line) for line in lines])
-        if display:
-            print(bracket)
-        return bracket
+        return self._actually_print_bracket(lines, display)

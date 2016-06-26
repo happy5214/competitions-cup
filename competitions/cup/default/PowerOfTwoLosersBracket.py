@@ -18,11 +18,11 @@
 
 from __future__ import print_function, unicode_literals
 
-from competitions.cup import Bracket, CupFinished
+from competitions.cup import StandardBracket, CupFinished
 from competitions.match import config
 
 
-class PowerOfTwoLosersBracket(Bracket):
+class PowerOfTwoLosersBracket(StandardBracket):
 
     """Double-elimination cup losers bracket for powers of two (4, 8, 16, etc.)."""
 
@@ -196,8 +196,6 @@ class PowerOfTwoLosersBracket(Bracket):
                                                        match_num, first_team)
                 except IndexError:
                     lines[i].append(space)
-        bracket = '\n'.join([''.join(line) for line in lines])
         if display:
             print()
-            print(bracket)
-        return bracket
+        return self._actually_print_bracket(lines, display)
