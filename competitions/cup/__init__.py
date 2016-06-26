@@ -21,6 +21,17 @@ from __future__ import unicode_literals
 import pkg_resources
 
 
+def init_nested_list(count):
+    """Initialize an empty nested list.
+
+    @param count: The length of the list
+    @type count: int
+    @return: A nested list
+    @rtype: list
+    """
+    return [[] for __ in range(count)]
+
+
 class Bracket(object):
 
     """Base class for tournament brackets."""

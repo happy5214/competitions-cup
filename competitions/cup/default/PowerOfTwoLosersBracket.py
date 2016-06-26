@@ -18,7 +18,7 @@
 
 from __future__ import print_function, unicode_literals
 
-from competitions.cup import StandardBracket, CupFinished
+from competitions.cup import StandardBracket, CupFinished, init_nested_list
 from competitions.match import config
 
 
@@ -169,7 +169,7 @@ class PowerOfTwoLosersBracket(StandardBracket):
         space = ' ' * 40
         first = 2 ** (self.phases - 1)
         line_count = first * 5 - 1
-        lines = [[] for __ in range(line_count)]
+        lines = init_nested_list(line_count)
         first_team = True
         team_str = self._bracket_match_str
         for phase in range(self.phases):

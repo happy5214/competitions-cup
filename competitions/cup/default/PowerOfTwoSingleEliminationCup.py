@@ -19,7 +19,7 @@
 from __future__ import print_function, unicode_literals
 
 from competitions.match import config
-from competitions.cup import StandardCup, CupFinished
+from competitions.cup import StandardCup, CupFinished, init_nested_list
 
 
 class PowerOfTwoSingleEliminationCup(StandardCup):
@@ -107,7 +107,7 @@ class PowerOfTwoSingleEliminationCup(StandardCup):
         @rtype: str
         """
         line_count = self.team_count * 2 - 1
-        lines = [[] for __ in range(line_count)]
+        lines = init_nested_list(line_count)
         first_team = True
         team_str = self._bracket_match_str
         for round in range(self.round_count):
