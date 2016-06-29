@@ -13,7 +13,7 @@ with open(path.join(here, 'README.rst'), encoding='utf-8') as f:
 
 setup(
     name='competitions-cup',
-    version='0.3',
+    version='0.3.1',
 
     description='Generic cup competitions',
     long_description=long_description,

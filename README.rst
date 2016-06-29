@@ -29,3 +29,6 @@ Changes in v0.1
 .. image:: https://coveralls.io/repos/happy5214/competitions-cup/badge.svg?branch=master&service=github
     :alt: Coverage status
     :target: https://coveralls.io/github/happy5214/competitions-cup?branch=master
+.. image:: https://codeclimate.com/github/happy5214/competitions-cup/badges/gpa.svg
+   :target: https://codeclimate.com/github/happy5214/competitions-cup
+   :alt: Code Climate
