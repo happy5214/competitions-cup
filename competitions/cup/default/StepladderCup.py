@@ -19,10 +19,10 @@
 from __future__ import print_function, unicode_literals
 
 from competitions.match import config
-from competitions.cup import Cup
+from competitions.cup import StandardCup
 
 
-class StepladderCup(Cup):
+class StepladderCup(StandardCup):
 
     """Standard stepladder cup for any number of teams."""
 
@@ -63,14 +63,8 @@ class StepladderCup(Cup):
         for x in range(2, self.team_count):
             self.matches[x - 1][0].team1 = teams[x]
 
-    def print_cup(self, display=True):
-        """Print the cup to a string and (optionally) the console.
-
-        @param display: Whether to print to the console.
-        @type display: bool
-        @return: The displayed bracket
-        @rtype: str
-        """
+    def _print_bracket_lines(self):
+        """Generate the bracket lines to be printed."""
         space = ' ' * 40
         line_count = self.team_count + 1
         lines = [[] for __ in range(line_count)]
@@ -91,7 +85,4 @@ class StepladderCup(Cup):
                                    ' ' * 5)
             for x in range(line_num + 1, line_count):
                 lines[x].append(space)
-        bracket = '\n'.join([''.join(line) for line in lines])
-        if display:
-            print(bracket)
-        return bracket
+        return lines

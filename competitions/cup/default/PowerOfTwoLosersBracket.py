@@ -133,14 +133,8 @@ class PowerOfTwoLosersBracket(StandardBracket):
             match.team1 = team
             self._current_loser_placement += 1
 
-    def print_cup(self, display=True):
-        """Print the cup to a string and (optionally) the console.
-
-        @param display: Whether to print to the console.
-        @type display: bool
-        @return: The displayed bracket
-        @rtype: str
-        """
+    def _print_bracket_lines(self):
+        """Generate the bracket lines to be printed."""
         space = ' ' * 40
         first = 2 ** (self.phases - 1)
         line_count = first * 5 - 1
@@ -171,4 +165,4 @@ class PowerOfTwoLosersBracket(StandardBracket):
                                                        match_num, first_team)
                 except IndexError:
                     lines[i].append(space)
-        return self._actually_print_bracket(lines, display)
+        return lines

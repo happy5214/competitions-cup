@@ -73,14 +73,8 @@ class PowerOfTwoSingleEliminationCup(StandardCup):
             first_round[x].team1 = self.teams[x * 2]
             first_round[x].team2 = self.teams[x * 2 + 1]
 
-    def print_cup(self, display=True):
-        """Print the cup to a string and (optionally) the console.
-
-        @param display: Whether to print to the console.
-        @type display: bool
-        @return: The displayed bracket
-        @rtype: str
-        """
+    def _print_bracket_lines(self):
+        """Generate the bracket lines to be printed."""
         line_count = self.team_count * 2 - 1
         lines = init_nested_list(line_count)
         first_team = True
@@ -93,4 +87,4 @@ class PowerOfTwoSingleEliminationCup(StandardCup):
                 (match_num, first_team) = team_str((i % div == mod), lines[i],
                                                    round, match_num,
                                                    first_team)
-        return self._actually_print_bracket(lines, display)
+        return lines

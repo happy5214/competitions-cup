@@ -42,6 +42,10 @@ class Bracket(object):
         self.matches = []
         self.index = [0, -1]
 
+    def _assign_winner(self, winner):
+        """Assign winner to their next match."""
+        raise NotImplementedError
+
     def _set_current_match(self):
         """Set the current match."""
         self.index[1] += 1
@@ -119,7 +123,19 @@ class PrintableBracket(Bracket):
             line.append(' ' * 40)
             return (match_num, first_team)
 
-    def _actually_print_bracket(self, lines, display):
+    def _print_bracket_lines(self):
+        """Generate the bracket lines to be printed."""
+        raise NotImplementedError
+
+    def print_cup(self, display=True):
+        """Print the cup to a string and (optionally) the console.
+
+        @param display: Whether to print to the console.
+        @type display: bool
+        @return: The displayed bracket
+        @rtype: str
+        """
+        lines = self._print_bracket_lines()
         bracket = '\n'.join([''.join(line) for line in lines])
         if display:
             print(bracket)
@@ -184,15 +200,7 @@ class PrintableCup(Cup, PrintableBracket):
 
     """Combo class for a full cup printable to the console."""
 
-    def print_cup(self, display=True):
-        """Print the cup to a string and (optionally) the console.
-
-        @param display: Whether to print to the console.
-        @type display: bool
-        @return: The displayed bracket
-        @rtype: str
-        """
-        raise NotImplementedError
+    pass
 
 
 class StandardCup(PrintableCup):
