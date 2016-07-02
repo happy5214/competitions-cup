@@ -19,7 +19,7 @@
 from __future__ import print_function, unicode_literals
 
 from competitions.match import config
-from competitions.cup import Cup, CupFinished
+from competitions.cup import Cup
 
 
 class StepladderCup(Cup):
@@ -47,26 +47,15 @@ class StepladderCup(Cup):
         for x in range(2, self.team_count):
             self.matches.append(Match(self.teams[x], 'Match {} Winner'.format(x - 1)))
 
-    def play_match(self):
-        """Play a cup match.
-
-        @return: The winner of the simulated match
-        @raise CupFinished: If the cup is finished
-        """
+    def _set_current_match(self):
+        """Set the current match."""
         self.index += 1
-        match = self.matches[self.index]
-        winner = None
-        while not winner:
-            match.play()
-            winner = match.winner
-        try:
-            next_match = self.matches[self.index + 1]
-            next_match.team2 = winner
-        except IndexError:
-            self.winner = winner
-            raise CupFinished(winner)
+        self.current_match = self.matches[self.index]
 
-        return winner
+    def _assign_winner(self, winner):
+        """Assign winner to their next match."""
+        next_match = self.matches[self.index + 1]
+        next_match.team2 = winner
 
     def update_teams(self, teams):
         """Update the list of teams and the seedings.

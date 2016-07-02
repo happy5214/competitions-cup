@@ -18,7 +18,7 @@
 
 from __future__ import print_function, unicode_literals
 
-from competitions.cup import StandardBracket, CupFinished, init_nested_list
+from competitions.cup import StandardBracket, init_nested_list
 from competitions.match import config
 
 
@@ -100,12 +100,8 @@ class PowerOfTwoLosersBracket(StandardBracket):
         self._current_loser_placement = self._first_round_loser_placement = 0
         self._first_round_teams = len(placements) + 1
 
-    def play_match(self):
-        """Play a cup match.
-
-        @return: The winner of the simulated match
-        @raise CupFinished: If the cup is finished
-        """
+    def _set_current_match(self):
+        """Set the current match."""
         self.index[1] += 1
         round = self.matches[self.index[0]]
         match = None
@@ -117,26 +113,19 @@ class PowerOfTwoLosersBracket(StandardBracket):
             round = self.matches[self.index[0]]
             match = round[0]
         self.current_match = match
-        winner = None
-        while not winner:
-            match.play()
-            winner = match.winner
-        try:
-            is_minor = self.index[0] % 2 == 0
-            if is_minor:
-                next_match = self.matches[self.index[0] + 1][self.index[1]]
-                next_match.team2 = winner
-            else:
-                next_match = self.matches[self.index[0] + 1][self.index[1] // 2]
-                if self.index[1] % 2 == 0:
-                    next_match.team1 = winner
-                else:
-                    next_match.team2 = winner
-        except IndexError:
-            self.winner = winner
-            raise CupFinished(winner)
 
-        return winner
+    def _assign_winner(self, winner):
+        """Assign winner to their next match."""
+        is_minor = self.index[0] % 2 == 0
+        if is_minor:
+            next_match = self.matches[self.index[0] + 1][self.index[1]]
+            next_match.team2 = winner
+        else:
+            next_match = self.matches[self.index[0] + 1][self.index[1] // 2]
+            if self.index[1] % 2 == 0:
+                next_match.team1 = winner
+            else:
+                next_match.team2 = winner
 
     def add_team(self, team):
         """Add a loser from the winners bracket to the losers bracket.

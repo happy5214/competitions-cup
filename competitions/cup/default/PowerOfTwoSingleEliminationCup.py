@@ -19,7 +19,7 @@
 from __future__ import print_function, unicode_literals
 
 from competitions.match import config
-from competitions.cup import StandardCup, CupFinished, init_nested_list
+from competitions.cup import StandardCup, init_nested_list
 
 
 class PowerOfTwoSingleEliminationCup(StandardCup):
@@ -53,12 +53,8 @@ class PowerOfTwoSingleEliminationCup(StandardCup):
                 match_num += 2
             self.matches.append(round)
 
-    def play_match(self):
-        """Play a cup match.
-
-        @return: The winner of the simulated match
-        @raise CupFinished: If the cup is finished
-        """
+    def _set_current_match(self):
+        """Set the current match."""
         self.index[1] += 1
         round = self.matches[self.index[0]]
         match = None
@@ -70,21 +66,14 @@ class PowerOfTwoSingleEliminationCup(StandardCup):
             round = self.matches[self.index[0]]
             match = round[0]
         self.current_match = match
-        winner = None
-        while not winner:
-            match.play()
-            winner = match.winner
-        try:
-            next_match = self.matches[self.index[0] + 1][self.index[1] // 2]
-            if self.index[1] % 2 == 0:
-                next_match.team1 = winner
-            else:
-                next_match.team2 = winner
-        except IndexError:
-            self.winner = winner
-            raise CupFinished(winner)
 
-        return winner
+    def _assign_winner(self, winner):
+        """Assign winner to their next match."""
+        next_match = self.matches[self.index[0] + 1][self.index[1] // 2]
+        if self.index[1] % 2 == 0:
+            next_match.team1 = winner
+        else:
+            next_match.team2 = winner
 
     def update_teams(self, teams):
         """Update the list of teams and the first-round matches.

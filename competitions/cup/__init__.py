@@ -48,7 +48,18 @@ class Bracket(object):
         @return: The winner of the simulated match
         @raise CupFinished: If the cup is finished
         """
-        raise NotImplementedError
+        self._set_current_match()
+        winner = None
+        while not winner:
+            self.current_match.play()
+            winner = self.current_match.winner
+        try:
+            self._assign_winner(winner)
+        except IndexError:
+            self.winner = winner
+            raise CupFinished(winner)
+
+        return winner
 
     @property
     def round_over(self):
