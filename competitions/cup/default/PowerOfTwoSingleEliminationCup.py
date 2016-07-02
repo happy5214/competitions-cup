@@ -53,20 +53,6 @@ class PowerOfTwoSingleEliminationCup(StandardCup):
                 match_num += 2
             self.matches.append(round)
 
-    def _set_current_match(self):
-        """Set the current match."""
-        self.index[1] += 1
-        round = self.matches[self.index[0]]
-        match = None
-        try:
-            match = round[self.index[1]]
-        except IndexError:
-            self.index[0] += 1
-            self.index[1] = 0
-            round = self.matches[self.index[0]]
-            match = round[0]
-        self.current_match = match
-
     def _assign_winner(self, winner):
         """Assign winner to their next match."""
         next_match = self.matches[self.index[0] + 1][self.index[1] // 2]

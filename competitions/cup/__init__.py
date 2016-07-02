@@ -42,6 +42,20 @@ class Bracket(object):
         self.matches = []
         self.index = [0, -1]
 
+    def _set_current_match(self):
+        """Set the current match."""
+        self.index[1] += 1
+        round = self.matches[self.index[0]]
+        match = None
+        try:
+            match = round[self.index[1]]
+        except IndexError:
+            self.index[0] += 1
+            self.index[1] = 0
+            round = self.matches[self.index[0]]
+            match = round[0]
+        self.current_match = match
+
     def play_match(self):
         """Play a cup match.
 

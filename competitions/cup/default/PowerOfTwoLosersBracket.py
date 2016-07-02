@@ -100,20 +100,6 @@ class PowerOfTwoLosersBracket(StandardBracket):
         self._current_loser_placement = self._first_round_loser_placement = 0
         self._first_round_teams = len(placements) + 1
 
-    def _set_current_match(self):
-        """Set the current match."""
-        self.index[1] += 1
-        round = self.matches[self.index[0]]
-        match = None
-        try:
-            match = round[self.index[1]]
-        except IndexError:
-            self.index[0] += 1
-            self.index[1] = 0
-            round = self.matches[self.index[0]]
-            match = round[0]
-        self.current_match = match
-
     def _assign_winner(self, winner):
         """Assign winner to their next match."""
         is_minor = self.index[0] % 2 == 0

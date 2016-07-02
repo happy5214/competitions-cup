@@ -57,22 +57,22 @@ class TestStepladderCup(TestCase):
         teams = ['Team' for __ in range(8)]
         teams[5] = 'Special'
         cup = CupClass(teams=teams)
-        self.assertEqual(teams[0], cup.matches[0].team1, 'First team not used.')
-        self.assertEqual(cup.matches[4].team1, 'Special', 'Special team not used.')
+        self.assertEqual(teams[0], cup.matches[0][0].team1, 'First team not used.')
+        self.assertEqual(cup.matches[4][0].team1, 'Special', 'Special team not used.')
 
     def test_teams_redone(self):
         """Test that update_teams resets first round."""
         teams = ['Team' for __ in range(8)]
         teams[5] = 'Special'
         cup = CupClass(teams=teams)
-        self.assertEqual(teams[0], cup.matches[0].team1, 'First team not used.')
-        self.assertEqual(cup.matches[4].team1, 'Special', 'Special team not used.')
+        self.assertEqual(teams[0], cup.matches[0][0].team1, 'First team not used.')
+        self.assertEqual(cup.matches[4][0].team1, 'Special', 'Special team not used.')
         new_teams = ['New' for __ in range(8)]
         new_teams[2] = 'New Special'
         cup.update_teams(new_teams)
-        self.assertEqual(new_teams[0], cup.matches[0].team1, 'First team not updated.')
-        self.assertEqual(cup.matches[1].team1, 'New Special', 'New special team not updated.')
-        self.assertNotEqual(cup.matches[4].team1, 'Special', 'Old special team not updated.')
+        self.assertEqual(new_teams[0], cup.matches[0][0].team1, 'First team not updated.')
+        self.assertEqual(cup.matches[1][0].team1, 'New Special', 'New special team not updated.')
+        self.assertNotEqual(cup.matches[4][0].team1, 'Special', 'Old special team not updated.')
 
     def test_cup_results(self):
         """Test the results of playing cup."""
@@ -81,7 +81,7 @@ class TestStepladderCup(TestCase):
         for i in range(6):
             self.assertIsInstance(cup.play_match(), unicode, 'Cup ended early.')
         self.assertRaises(CupFinished, cup.play_match)
-        final_match = cup.matches[6]
+        final_match = cup.matches[6][0]
         self.assertEqual(final_match.team1, teams[7], 'First finalist is wrong.')
         self.assertEqual(final_match.team2, teams[6], 'Second finalist is wrong.')
         self.assertEqual(cup.winner, 'Team 8', 'Cup has wrong winner.')

@@ -40,21 +40,15 @@ class StepladderCup(Cup):
                                                 team_count=len(teams))
         Match = config.base_match
 
-        self.index = -1
         self.round_count = self.team_count - 1
 
-        self.matches.append(Match(self.teams[0], self.teams[1]))
+        self.matches.append([Match(self.teams[0], self.teams[1])])
         for x in range(2, self.team_count):
-            self.matches.append(Match(self.teams[x], 'Match {} Winner'.format(x - 1)))
-
-    def _set_current_match(self):
-        """Set the current match."""
-        self.index += 1
-        self.current_match = self.matches[self.index]
+            self.matches.append([Match(self.teams[x], 'Match {} Winner'.format(x - 1))])
 
     def _assign_winner(self, winner):
         """Assign winner to their next match."""
-        next_match = self.matches[self.index + 1]
+        next_match = self.matches[self.index[0] + 1][0]
         next_match.team2 = winner
 
     def update_teams(self, teams):
@@ -64,10 +58,10 @@ class StepladderCup(Cup):
         @type teams: list
         """
         self.teams = teams
-        self.matches[0].team1 = teams[0]
-        self.matches[0].team2 = teams[1]
+        self.matches[0][0].team1 = teams[0]
+        self.matches[0][0].team2 = teams[1]
         for x in range(2, self.team_count):
-            self.matches[x - 1].team1 = teams[x]
+            self.matches[x - 1][0].team1 = teams[x]
 
     def print_cup(self, display=True):
         """Print the cup to a string and (optionally) the console.
@@ -84,16 +78,16 @@ class StepladderCup(Cup):
             line_num = self.round_count - round - 1
             for x in range(line_num):
                 lines[x].append(space)
-            lines[line_num].append('{:<30}'.format(self.matches[round].team1) +
+            lines[line_num].append('{:<30}'.format(self.matches[round][0].team1) +
                                    ' ' +
-                                   '{:>4}'.format(self.matches[round].score1) +
+                                   '{:>4}'.format(self.matches[round][0].score1) +
                                    ' ' * 5)
             line_num += 1
             lines[line_num].append(space)
             line_num += 1
-            lines[line_num].append('{:<30}'.format(self.matches[round].team2) +
+            lines[line_num].append('{:<30}'.format(self.matches[round][0].team2) +
                                    ' ' +
-                                   '{:>4}'.format(self.matches[round].score2) +
+                                   '{:>4}'.format(self.matches[round][0].score2) +
                                    ' ' * 5)
             for x in range(line_num + 1, line_count):
                 lines[x].append(space)
