@@ -13,6 +13,12 @@ Changes in v0.3
 
 - Double-elimination brackets for powers of two (4, 8, 16, etc.)
 
+Later changes in the v0.2 series
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+- v0.3.1 implemented several code style fixes and other code refactorings.
+- v0.3.2 implemented a neutral bracket-layout system to replace the console-specific system.
+
 Changes in v0.2
 ---------------
 
