@@ -73,18 +73,20 @@ class PowerOfTwoSingleEliminationCup(StandardCup):
             first_round[x].team1 = self.teams[x * 2]
             first_round[x].team2 = self.teams[x * 2 + 1]
 
-    def _print_bracket_lines(self):
-        """Generate the bracket lines to be printed."""
+    def _generate_layout(self):
+        """Generate the bracket layout for display."""
         line_count = self.team_count * 2 - 1
-        lines = init_nested_list(line_count)
+        layout = init_nested_list(line_count)
         first_team = True
-        team_str = self._bracket_match_str
+        match_gen = self._match_for_layout
         for round in range(self.round_count):
             match_num = 0
             div = 2 * 2 ** round
             mod = div // 2 - 1
             for i in range(line_count):
-                (match_num, first_team) = team_str((i % div == mod), lines[i],
-                                                   round, match_num,
-                                                   first_team)
-        return lines
+                (conf, layout_entry) = match_gen((i % div == mod),
+                                                 round, match_num,
+                                                 first_team)
+                layout[i].append(layout_entry)
+                (match_num, first_team) = conf
+        return layout

@@ -125,6 +125,7 @@ class TestPowerOfTwoDoubleEliminationCup(TestCase):
         cup = CupClass(rounds=3, teams=teams)
         cup.play_cup()
         expected_string = (
+            '\n'
             'Team 1                            5     '
             '                                        '
             '                                        '
@@ -238,6 +239,7 @@ class TestPowerOfTwoDoubleEliminationCup(TestCase):
             '\n'
             'Team 5                            0          '
             '                                             '
+            '\n'
         )
         self.assertEqual(cup.print_cup(), expected_string,
                          'Wrong bracket printed.')
@@ -286,6 +288,7 @@ class TestPowerOfTwoLosersBracket(TestCase):
         except CupFinished:
             pass
         expected_string = (
+            '\n'
             '                                        '
             '                                        '
             '                                        '
@@ -330,6 +333,7 @@ class TestPowerOfTwoLosersBracket(TestCase):
             '                                        '
             '                                        '
             '                                        '
+            '\n'
         )
         self.assertEqual(bracket.print_cup(), expected_string,
                          'Wrong bracket printed.')

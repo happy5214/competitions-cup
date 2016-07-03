@@ -112,6 +112,7 @@ class PowerOfTwoDoubleEliminationCup(StandardCup):
         winners_printout = self.winners_bracket.print_cup(display=False)
         losers_printout = self.losers_bracket.print_cup(display=False)
         final_printout = (
+            '\n'
             '{:<30} {:>4} {:>4}     '
             '                                             '
             '\n'
@@ -120,9 +121,10 @@ class PowerOfTwoDoubleEliminationCup(StandardCup):
             '\n'
             '{:<30} {:>4} {:>4}     '
             '                                             '
+            '\n'
         ).format(self.final.team1, self.final_scores[0][0], self.final_scores[1][0],
                  self.final.team2, self.final_scores[0][1], self.final_scores[1][1])
-        full_printout = winners_printout + '\n\n' + losers_printout + '\n\n\n' + final_printout
+        full_printout = winners_printout + losers_printout + '\n' + final_printout
         if display:
             print(full_printout)
         return full_printout

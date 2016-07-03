@@ -63,26 +63,20 @@ class StepladderCup(StandardCup):
         for x in range(2, self.team_count):
             self.matches[x - 1][0].team1 = teams[x]
 
-    def _print_bracket_lines(self):
-        """Generate the bracket lines to be printed."""
-        space = ' ' * 40
+    def _generate_layout(self):
+        """Generate the bracket layout for display."""
+        space = (None, None)
         line_count = self.team_count + 1
-        lines = [[] for __ in range(line_count)]
+        layout = [[] for __ in range(line_count)]
         for round in range(self.round_count):
             line_num = self.round_count - round - 1
             for x in range(line_num):
-                lines[x].append(space)
-            lines[line_num].append('{:<30}'.format(self.matches[round][0].team1) +
-                                   ' ' +
-                                   '{:>4}'.format(self.matches[round][0].score1) +
-                                   ' ' * 5)
+                layout[x].append(space)
+            layout[line_num].append((self.matches[round][0], 1))
             line_num += 1
-            lines[line_num].append(space)
+            layout[line_num].append(space)
             line_num += 1
-            lines[line_num].append('{:<30}'.format(self.matches[round][0].team2) +
-                                   ' ' +
-                                   '{:>4}'.format(self.matches[round][0].score2) +
-                                   ' ' * 5)
+            layout[line_num].append((self.matches[round][0], 2))
             for x in range(line_num + 1, line_count):
-                lines[x].append(space)
-        return lines
+                layout[x].append(space)
+        return layout

@@ -92,6 +92,7 @@ class TestStepladderCup(TestCase):
         cup = CupClass(teams=teams)
         cup.play_cup()
         expected_string = (
+            '\n'
             '                                        '
             '                                        '
             '                                        '
@@ -163,6 +164,7 @@ class TestStepladderCup(TestCase):
             '                                        '
             '                                        '
             '                                        '
+            '\n'
         )
         self.assertEqual(cup.print_cup(), expected_string,
                          'Wrong bracket printed.')

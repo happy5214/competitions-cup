@@ -133,36 +133,38 @@ class PowerOfTwoLosersBracket(StandardBracket):
             match.team1 = team
             self._current_loser_placement += 1
 
-    def _print_bracket_lines(self):
-        """Generate the bracket lines to be printed."""
-        space = ' ' * 40
+    def _generate_layout(self):
+        """Generate the bracket layout for display."""
+        space = (None, None)
         first = 2 ** (self.phases - 1)
         line_count = first * 5 - 1
-        lines = init_nested_list(line_count)
+        layout = init_nested_list(line_count)
         first_team = True
-        team_str = self._bracket_match_str
+        match_gen = self._match_for_layout
         for phase in range(self.phases):
             first = 2 ** (self.phases - 1)
             match_num = 0
             round = phase * 2
             div = 2 * 2 ** phase
             for i in range(first):
-                lines[i].append(space)
+                layout[i].append(space)
             for i in range(first, line_count):
-                (match_num, first_team) = team_str(((i - first) % div == 0),
-                                                   lines[i], round, match_num,
-                                                   first_team)
+                (conf, layout_entry) = match_gen(((i - first) % div == 0),
+                                                 round, match_num, first_team)
+                layout[i].append(layout_entry)
+                (match_num, first_team) = conf
             # Major round
             match_num = 0
             first -= 2 ** phase
             round += 1
             for i in range(first):
-                lines[i].append(space)
+                layout[i].append(space)
             for i in range(first, line_count):
                 try:
-                    (match_num, first_team) = team_str(((i - first) % div == 0),
-                                                       lines[i], round,
-                                                       match_num, first_team)
+                    (conf, layout_entry) = match_gen(((i - first) % div == 0),
+                                                     round, match_num, first_team)
+                    layout[i].append(layout_entry)
+                    (match_num, first_team) = conf
                 except IndexError:
-                    lines[i].append(space)
-        return lines
+                    layout[i].append(space)
+        return layout

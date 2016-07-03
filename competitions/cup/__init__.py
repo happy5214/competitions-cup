@@ -93,39 +93,46 @@ class PrintableBracket(Bracket):
 
     """Mixin for a bracket printable to the console."""
 
-    def _bracket_match_str(self, test, line, round_num, match_num, first_team):
-        """Generate the string for a match to place in a printed bracket.
+    def _generate_layout(self):
+        """Generate the bracket layout for display."""
+        raise NotImplementedError
+
+    def _match_for_layout(self, test, round_num, match_num, first_team):
+        """Generate the layout entry for a match to place in a displayed bracket.
 
         @param test: Whether to print a team or a blank space
         @type test: bool
-        @param line: The line to append the string to
-        @type line: list
         @param round_num: The round number in self.matches
         @type round_num: int
         @param match_num: The match number for the round in self.matches
         @type match_num: int
         @param first_team: Whether to return the string for the first team
         @type first_team: bool
-        @return: (match_num, False) if first_team and test are True,
-                 (match_num + 1, True) if only test is True,
-                 (match_num, first_team) otherwise
+        @return: ((match_num, new first_team), (match, old first_team))
         @rtype: tuple
         """
         if test:
             match = self.matches[round_num][match_num]
-            if first_team:
-                team, score = match.team1, match.score1
-            else:
-                team, score = match.team2, match.score2
-            line.append('{:<30} {:>4}     '.format(team, score))
-            return (match_num, False) if first_team else (match_num + 1, True)
+            return (((match_num, False), (match, 1)) if first_team
+                    else ((match_num + 1, True), (match, 2)))
         else:
-            line.append(' ' * 40)
-            return (match_num, first_team)
+            return ((match_num, first_team), (None, None))
 
-    def _print_bracket_lines(self):
-        """Generate the bracket lines to be printed."""
-        raise NotImplementedError
+    def _generate_printout(self, layout):
+        """Generate the console printout for the bracket."""
+        printout = '\n'
+        for row in layout:
+            for cell in row:
+                match, team_num = cell
+                if not team_num:
+                    team, score = '', ''
+                elif team_num == 1:
+                    team, score = match.team1, match.score1
+                else:
+                    team, score = match.team2, match.score2
+                printout += '{:<30} {:>4}     '.format(team, score)
+            printout += '\n'
+        return printout
 
     def print_cup(self, display=True):
         """Print the cup to a string and (optionally) the console.
@@ -135,11 +142,11 @@ class PrintableBracket(Bracket):
         @return: The displayed bracket
         @rtype: str
         """
-        lines = self._print_bracket_lines()
-        bracket = '\n'.join([''.join(line) for line in lines])
+        layout = self._generate_layout()
+        printout = self._generate_printout(layout)
         if display:
-            print(bracket)
-        return bracket
+            print(printout)
+        return printout
 
 
 class StandardBracket(PrintableBracket):
