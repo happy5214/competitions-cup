@@ -36,15 +36,20 @@ class PowerOfTwoSingleEliminationCup(StandardCup):
         """
         super(PowerOfTwoSingleEliminationCup, self).__init__(teams=teams,
                                                              team_count=2 ** rounds)
-        Match = config.base_match
 
         self.round_count = rounds
 
+        # Build bracket
+        self._build_bracket()
+
+    def _build_bracket(self):
+        """Build the nested list representing the bracket."""
+        Match = config.base_match  # Load match class
         match_count = self.team_count // 2
         self.matches.append([Match(self.teams[i * 2], self.teams[i * 2 + 1])
                              for i in range(match_count)])
         match_num = 1
-        for __ in range(1, rounds):
+        for __ in range(1, self.round_count):
             match_count //= 2
             round = []
             for ___ in range(match_count):

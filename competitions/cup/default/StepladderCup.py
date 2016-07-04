@@ -38,10 +38,14 @@ class StepladderCup(StandardCup):
         else:
             super(StepladderCup, self).__init__(teams=teams,
                                                 team_count=len(teams))
-        Match = config.base_match
-
         self.round_count = self.team_count - 1
 
+        # Build bracket
+        self._build_bracket()
+
+    def _build_bracket(self):
+        """Build the nested list representing the bracket."""
+        Match = config.base_match  # Load match class
         self.matches.append([Match(self.teams[0], self.teams[1])])
         for x in range(2, self.team_count):
             self.matches.append([Match(self.teams[x], 'Match {} Winner'.format(x - 1))])

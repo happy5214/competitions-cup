@@ -42,6 +42,10 @@ class Bracket(object):
         self.matches = []
         self.index = [0, -1]
 
+    def _build_bracket(self):
+        """Build the nested list representing the bracket."""
+        raise NotImplementedError
+
     def _assign_winner(self, winner):
         """Assign winner to their next match."""
         raise NotImplementedError
