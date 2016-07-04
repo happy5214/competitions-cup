@@ -38,14 +38,22 @@ class PowerOfTwoLosersBracket(StandardBracket):
         if rounds < 2:
             raise ValueError('Not enough rounds.')
 
-        Match = config.base_match  # Load match class
-
         # Object constants
         self.winners_round_count = rounds
         self.phases = rounds - 1
         self.round_count = self.phases * 2
 
         # Build bracket
+        self._build_bracket()
+
+        # Determine placements for losers
+        self._generate_loser_placements()
+
+    def _build_bracket(self):
+        """Build the nested list representing the bracket."""
+        Match = config.base_match  # Load match class
+        rounds = self.winners_round_count
+
         match_count = 2 ** (rounds - 2)
         self.matches.append([Match("Match {} Loser".format(2 * i + 1),
                                    "Match {} Loser".format(2 * i + 2))
@@ -61,8 +69,6 @@ class PowerOfTwoLosersBracket(StandardBracket):
                 winners_match_index += 1
                 losers_match_num += 1
             self.matches.append(round)
-            if match_count == 1:
-                break
             match_count //= 2
             round = []
             for ___ in range(match_count):
@@ -70,7 +76,7 @@ class PowerOfTwoLosersBracket(StandardBracket):
                                    'Match L{} Winner'.format(losers_match_num + 1)))
                 losers_match_num += 2
             self.matches.append(round)
-        self._generate_loser_placements()
+        del self.matches[-1]
 
     def _generate_winner_nums(self, rounds):
         """Generate the list of winners bracket match numbers.

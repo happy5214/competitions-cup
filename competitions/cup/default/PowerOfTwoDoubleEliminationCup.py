@@ -57,6 +57,40 @@ class PowerOfTwoDoubleEliminationCup(StandardCup):
         self.final_scores = [('', ''), ('', '')]
         self.winners = {}
 
+    def _play_match(self):
+        """Play a match. Internal code."""
+        if self.current_bracket.round_over:
+            self.current_bracket_index += 1
+            self.current_bracket = self.bracket_progression[self.current_bracket_index]
+        winner = self.current_bracket.play_match()
+        if self.current_bracket == self.winners_bracket:
+            loser = self.current_bracket.current_match.loser
+            self.losers_bracket.add_team(loser)
+        return winner
+
+    def _bracket_finished(self, cf):
+        """Handle a finished sub-bracket."""
+        self.winners[self.current_bracket] = cf.winner
+        if self.current_bracket == self.winners_bracket:
+            self.final.team1 = cf.winner
+            loser = self.current_bracket.current_match.loser
+            self.losers_bracket.add_team(loser)
+        else:
+            self.final.team2 = cf.winner
+        return cf.winner
+
+    def _play_final(self):
+        """Play the cup final."""
+        winner = self.final.play()
+        self.final_scores[0] = (self.final.score1, self.final.score2)
+        if not self.require_double_win or winner == self.winners[self.winners_bracket]:
+            self.winner = winner
+            raise CupFinished(winner)
+        else:
+            self.winner = self.final.play()
+            self.final_scores[1] = (self.final.score1, self.final.score2)
+            raise CupFinished(self.winner)
+
     def play_match(self):
         """Play a cup match.
 
@@ -64,33 +98,11 @@ class PowerOfTwoDoubleEliminationCup(StandardCup):
         @raise CupFinished: If the cup is finished
         """
         try:
-            if self.current_bracket.round_over:
-                self.current_bracket_index += 1
-                self.current_bracket = self.bracket_progression[self.current_bracket_index]
-            winner = self.current_bracket.play_match()
-            if self.current_bracket == self.winners_bracket:
-                loser = self.current_bracket.current_match.loser
-                self.losers_bracket.add_team(loser)
-            return winner
+            return self._play_match()
         except CupFinished as cf:
-            self.winners[self.current_bracket] = cf.winner
-            if self.current_bracket == self.winners_bracket:
-                self.final.team1 = cf.winner
-                loser = self.current_bracket.current_match.loser
-                self.losers_bracket.add_team(loser)
-            else:
-                self.final.team2 = cf.winner
-            return cf.winner
+            return self._bracket_finished(cf)
         except IndexError:
-            winner = self.final.play()
-            self.final_scores[0] = (self.final.score1, self.final.score2)
-            if not self.require_double_win or winner == self.winners[self.winners_bracket]:
-                self.winner = winner
-                raise CupFinished(winner)
-            else:
-                self.winner = self.final.play()
-                self.final_scores[1] = (self.final.score1, self.final.score2)
-                raise CupFinished(self.winner)
+            self._play_final()
 
     def update_teams(self, teams):
         """Update the list of teams and the first-round matches.
