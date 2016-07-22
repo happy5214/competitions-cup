@@ -117,8 +117,12 @@ class PrintableBracket(Bracket):
         """
         if test:
             match = self.matches[round_num][match_num]
-            return (((match_num, False), (match, 1)) if first_team
-                    else ((match_num + 1, True), (match, 2)))
+            if match.is_walkover:
+                return (((match_num, False), (None, None)) if first_team
+                        else ((match_num + 1, True), (None, None)))
+            else:
+                return (((match_num, False), (match, 1)) if first_team
+                        else ((match_num + 1, True), (match, 2)))
         else:
             return ((match_num, first_team), (None, None))
 
