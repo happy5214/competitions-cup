@@ -18,7 +18,6 @@
 
 from __future__ import print_function, unicode_literals
 
-from competitions.match import config
 from competitions.cup import StandardCup
 
 
@@ -26,26 +25,20 @@ class StepladderCup(StandardCup):
 
     """Standard stepladder cup for any number of teams."""
 
-    def __init__(self, teams):
+    def __init__(self, match_class, team_count=0, teams=[]):
         """Constructor.
 
         @param teams: A list or number of teams
         @type teams: list or int
         """
-        if isinstance(teams, int):
-            super(StepladderCup, self).__init__(teams=[],
-                                                team_count=teams)
-        else:
-            super(StepladderCup, self).__init__(teams=teams,
-                                                team_count=len(teams))
-        self.round_count = self.team_count - 1
-
-        # Build bracket
-        self._build_bracket()
+        super(StepladderCup, self).__init__(match_class=match_class,
+                                            teams=teams,
+                                            team_count=(team_count if team_count else len(teams)),
+                                            rounds=(team_count - 1 if team_count else len(teams) - 1))
 
     def _build_bracket(self):
         """Build the nested list representing the bracket."""
-        Match = config.base_match  # Load match class
+        Match = self.MatchClass
         self.matches.append([Match(self.teams[0], self.teams[1])])
         for x in range(2, self.team_count):
             self.matches.append([Match(self.teams[x], 'Match {} Winner'.format(x - 1))])

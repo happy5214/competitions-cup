@@ -22,35 +22,26 @@ from __future__ import unicode_literals
 
 from . import TestCase, PY3
 
-from competitions.match import config as match_config
-from competitions.cup import CupFinished, config as cup_config
+from competitions.cup import CupFinished
 from competitions.cup.default.PowerOfTwoDoubleEliminationCup import PowerOfTwoDoubleEliminationCup
 from competitions.cup.default.PowerOfTwoLosersBracket import PowerOfTwoLosersBracket
+from competitions.match.default.TestMatch import TestMatch
 
 if PY3:
     unicode = str
 
 
-CupClass = cup_config.cup('competitions.poweroftwo_double')
+CupClass = PowerOfTwoDoubleEliminationCup
+MatchClass = TestMatch
 
 
 class TestPowerOfTwoDoubleEliminationCup(TestCase):
 
     """Tests for standard double-elimination cup for powers of two."""
 
-    @classmethod
-    def setUpClass(cls):
-        """Class setup code."""
-        match_config.base_match = 'competitions.test'
-
-    def test_class_loading(self):
-        """Test the equality of class loaded through setuptools with direct import."""
-        self.assertEqual(CupClass, PowerOfTwoDoubleEliminationCup,
-                         'Classes not the same.')
-
     def test_default_team_list(self):
         """Test the automatically generated default team list."""
-        cup = CupClass(rounds=2)
+        cup = CupClass(match_class=MatchClass, rounds=2)
         list_of_teams = ['Team 1', 'Team 2', 'Team 3', 'Team 4']
         self.assertListEqual(cup.teams, list_of_teams)
 
@@ -58,18 +49,20 @@ class TestPowerOfTwoDoubleEliminationCup(TestCase):
         """Test team count checking in constructor."""
         teams = ['Team' for __ in range(7)]
         self.assertRaises(ValueError, CupClass,
+                          match_class=MatchClass,
                           rounds=2, teams=teams)
         teams = ['Team' for __ in range(4)]
         self.assertRaises(ValueError, CupClass,
+                          match_class=MatchClass,
                           rounds=3, teams=teams)
         teams = ['Team' for __ in range(16)]
-        CupClass(rounds=4, teams=teams)
+        CupClass(match_class=MatchClass, rounds=4, teams=teams)
 
     def test_teams_used(self):
         """Test that provided teams are used."""
         teams = ['Team' for __ in range(8)]
         teams[5] = 'Special'
-        cup = CupClass(rounds=3, teams=teams)
+        cup = CupClass(match_class=MatchClass, rounds=3, teams=teams)
         self.assertEqual(teams[0], cup.winners_bracket.matches[0][0].team1,
                          'First team not used.')
         self.assertEqual(cup.winners_bracket.matches[0][2].team2, 'Special',
@@ -79,7 +72,7 @@ class TestPowerOfTwoDoubleEliminationCup(TestCase):
         """Test that update_teams resets first round."""
         teams = ['Team' for __ in range(8)]
         teams[5] = 'Special'
-        cup = CupClass(rounds=3, teams=teams)
+        cup = CupClass(match_class=MatchClass, rounds=3, teams=teams)
         self.assertEqual(teams[0], cup.winners_bracket.matches[0][0].team1,
                          'First team not used.')
         self.assertEqual(cup.winners_bracket.matches[0][2].team2, 'Special',
@@ -97,7 +90,7 @@ class TestPowerOfTwoDoubleEliminationCup(TestCase):
     def test_cup_results(self):
         """Test the results of playing cup."""
         teams = ['Team {}'.format(x + 1) for x in range(8)]
-        cup = CupClass(rounds=3, teams=teams)
+        cup = CupClass(match_class=MatchClass, rounds=3, teams=teams)
         for i in range(13):
             self.assertIsInstance(cup.play_match(), unicode, 'Cup ended early.')
         self.assertRaises(CupFinished, cup.play_match)
@@ -109,7 +102,7 @@ class TestPowerOfTwoDoubleEliminationCup(TestCase):
     def test_replay(self):
         """Test replaying the final depending on the winner."""
         teams = ['Team {}'.format(x + 1) for x in range(8)]
-        cup = CupClass(rounds=3, teams=teams)
+        cup = CupClass(match_class=MatchClass, rounds=3, teams=teams)
         for i in range(13):
             self.assertIsInstance(cup.play_match(), unicode, 'Cup ended early.')
         cup.final.team1, cup.final.team2 = cup.final.team2, cup.final.team1
@@ -122,7 +115,7 @@ class TestPowerOfTwoDoubleEliminationCup(TestCase):
     def test_cup_printout(self):
         """Test the printout of the cup when completed."""
         teams = ['Team {}'.format(x + 1) for x in range(8)]
-        cup = CupClass(rounds=3, teams=teams)
+        cup = CupClass(match_class=MatchClass, rounds=3, teams=teams)
         cup.play_cup()
         expected_string = (
             '\n'
@@ -249,23 +242,19 @@ class TestPowerOfTwoLosersBracket(TestCase):
 
     """Tests for losers bracket of standard double-elimination cup for powers of two."""
 
-    @classmethod
-    def setUpClass(cls):
-        """Class setup code."""
-        match_config.base_match = 'competitions.test'
-
     def test_round_count(self):
         """Test the bracket's round count."""
-        self.assertRaises(ValueError, PowerOfTwoLosersBracket, rounds=1)
+        self.assertRaises(ValueError, PowerOfTwoLosersBracket,
+                          match_class=MatchClass, rounds=1)
         for rounds in range(2, 6):
-            bracket = PowerOfTwoLosersBracket(rounds=rounds)
+            bracket = PowerOfTwoLosersBracket(match_class=MatchClass, rounds=rounds)
             self.assertEqual(len(bracket.matches), ((rounds - 1) * 2),
                              "{}-team bracket has wrong number of rounds.".format(2 ** rounds))
 
     def test_bracket_results(self):
         """Test the results of playing losers bracket."""
         teams = ['Team {}'.format(x + 1) for x in range(7)]
-        bracket = PowerOfTwoLosersBracket(rounds=3)
+        bracket = PowerOfTwoLosersBracket(match_class=MatchClass, rounds=3)
         for team in teams:
             bracket.add_team(team)
         for i in range(5):
@@ -279,7 +268,7 @@ class TestPowerOfTwoLosersBracket(TestCase):
     def test_bracket_printout(self):
         """Test the printout of the losers bracket when completed."""
         teams = ['Team {}'.format(x + 1) for x in range(7)]
-        bracket = PowerOfTwoLosersBracket(rounds=3)
+        bracket = PowerOfTwoLosersBracket(match_class=MatchClass, rounds=3)
         for team in teams:
             bracket.add_team(team)
         try:

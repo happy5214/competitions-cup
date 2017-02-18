@@ -19,20 +19,19 @@
 from __future__ import print_function, unicode_literals
 
 from competitions.cup import StandardBracket, init_nested_list
-from competitions.match import config
 
 
 class PowerOfTwoLosersBracket(StandardBracket):
 
     """Double-elimination cup losers bracket for powers of two (4, 8, 16, etc.)."""
 
-    def __init__(self, rounds=0):
+    def __init__(self, match_class, rounds=0):
         """Constructor.
 
         @param rounds: The number of rounds in the corresponding winners bracket
         @type rounds: int
         """
-        super(PowerOfTwoLosersBracket, self).__init__()  # Parent constructor
+        super(PowerOfTwoLosersBracket, self).__init__(match_class=match_class)
 
         # Parameter validation
         if rounds < 2:
@@ -51,7 +50,7 @@ class PowerOfTwoLosersBracket(StandardBracket):
 
     def _build_bracket(self):
         """Build the nested list representing the bracket."""
-        Match = config.base_match  # Load match class
+        Match = self.MatchClass
         rounds = self.winners_round_count
 
         match_count = 2 ** (rounds - 2)

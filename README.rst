@@ -8,6 +8,11 @@ Currently, this package models standard single- and double-elimination brackets
 for team counts that are powers of two (4, 8, 16, etc.) and stepladder-style
 brackets for any number of teams.
 
+Changes in v0.5
+---------------
+
+- New interface to cup classes 
+
 Changes in v0.4
 ---------------
 

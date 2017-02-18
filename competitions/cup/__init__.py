@@ -18,7 +18,7 @@
 
 from __future__ import unicode_literals
 
-import pkg_resources
+from competitions.match import Match
 
 
 def init_nested_list(count):
@@ -36,11 +36,12 @@ class Bracket(object):
 
     """Base class for tournament brackets."""
 
-    def __init__(self):
+    def __init__(self, match_class=Match):
         """Constructor."""
         self.winner = None
         self.matches = []
         self.index = [0, -1]
+        self.MatchClass = match_class
 
     def _build_bracket(self):
         """Build the nested list representing the bracket."""
@@ -168,16 +169,20 @@ class Cup(Bracket):
 
     """Base class for knockout cups."""
 
-    def __init__(self, team_count, teams=[]):
+    def __init__(self, match_class, team_count, teams=[], rounds=0):
         """Constructor.
 
+        @param match_class: The class of the match simulator
+        @type match_class: Any Match-like class
         @param team_count: The expected number of teams
         @type team_count: int
         @param teams: The teams in this cup
         @type teams: list
+        @param rounds: The number of rounds
+        @type rounds: int
         @raise ValueError: If the list of teams has the wrong number of teams
         """
-        super(Cup, self).__init__()
+        super(Cup, self).__init__(match_class=match_class)
         if not teams:
             self.teams = list(map(lambda x: 'Team ' + str(x),
                                   range(1, team_count + 1)))
@@ -185,6 +190,8 @@ class Cup(Bracket):
             self.teams = teams
         if len(self.teams) != team_count:
             raise ValueError('Wrong number of teams')
+        self.round_count = rounds
+        self._build_bracket()
 
     @property
     def team_count(self):
@@ -240,33 +247,3 @@ class CupFinished(RuntimeError):
         @type winner: The type of teams in the cup
         """
         self.winner = winner
-
-
-class CupConfig(object):
-
-    """Cup configuration singleton class."""
-
-    created = False
-
-    def __init__(self):
-        """Constructor."""
-        if CupConfig.created:
-            raise RuntimeError
-        CupConfig.created = True
-        self._cup_types = {}
-        for cup in pkg_resources.iter_entry_points(group='competitions.cup.types'):
-            self._cup_types.update({cup.name: cup.load()})
-
-    def cup(self, code):
-        """Retrieve the cup referred to by this code.
-
-        @param code: The code for the cup class
-        @type code: str
-        @return: The cup class for the provided code.
-        @rtype: Cup
-        @raise KeyError: If there is no cup class loaded for this code
-        """
-        return self._cup_types[code]
-
-
-config = CupConfig()

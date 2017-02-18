@@ -18,7 +18,6 @@
 
 from __future__ import print_function, unicode_literals
 
-from competitions.match import config
 from competitions.cup import StandardCup, init_nested_list
 
 
@@ -26,7 +25,7 @@ class StandardSingleEliminationCup(StandardCup):
 
     """Standard single-elimination cup."""
 
-    def __init__(self, rounds=0, teams=[]):
+    def __init__(self, match_class, rounds=0, teams=[]):
         """Constructor.
 
         @param rounds: The number of rounds
@@ -34,17 +33,14 @@ class StandardSingleEliminationCup(StandardCup):
         @param teams: An optional list of teams
         @type teams: list
         """
-        super(StandardSingleEliminationCup, self).__init__(teams=teams,
-                                                           team_count=2 ** rounds)
-
-        self.round_count = rounds
-
-        # Build bracket
-        self._build_bracket()
+        super(StandardSingleEliminationCup, self).__init__(match_class=match_class,
+                                                           teams=teams,
+                                                           team_count=2 ** rounds,
+                                                           rounds=rounds)
 
     def _build_second_round(self, match_count, match_num):
         """Build the bracket's second round."""
-        Match = config.base_match  # Load match class
+        Match = self.MatchClass
         round = []
         for ___ in range(match_count):
             teams = []
@@ -61,7 +57,7 @@ class StandardSingleEliminationCup(StandardCup):
 
     def _build_bracket(self):
         """Build the nested list representing the bracket."""
-        Match = config.base_match  # Load match class
+        Match = self.MatchClass
         match_count = self.team_count // 2
         self.matches.append([Match(self.teams[i * 2], self.teams[i * 2 + 1])
                              for i in range(match_count)])

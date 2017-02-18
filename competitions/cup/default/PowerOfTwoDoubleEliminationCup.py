@@ -18,7 +18,6 @@
 
 from __future__ import print_function, unicode_literals
 
-from competitions.match import config
 from competitions.cup import StandardCup, CupFinished
 from competitions.cup.default.PowerOfTwoLosersBracket import PowerOfTwoLosersBracket
 from competitions.cup.default.PowerOfTwoSingleEliminationCup import PowerOfTwoSingleEliminationCup
@@ -28,7 +27,7 @@ class PowerOfTwoDoubleEliminationCup(StandardCup):
 
     """Standard double-elimination cup for powers of two (4, 8, 16, etc.)."""
 
-    def __init__(self, rounds=0, teams=[], require_double_win=True):
+    def __init__(self, match_class, rounds=0, teams=[], require_double_win=True):
         """Constructor.
 
         @param rounds: The number of rounds
@@ -37,18 +36,22 @@ class PowerOfTwoDoubleEliminationCup(StandardCup):
         @type teams: list
         """
         # Parent constructor
-        super(PowerOfTwoDoubleEliminationCup, self).__init__(teams=teams,
-                                                             team_count=2 ** rounds)
+        super(PowerOfTwoDoubleEliminationCup, self).__init__(match_class=match_class,
+                                                             teams=teams,
+                                                             team_count=2 ** rounds,
+                                                             rounds=rounds)
 
         # Parameters
         self.require_double_win = require_double_win
 
-        Match = config.base_match  # Load match class
-
-        # Bracket setup
-        self.winners_bracket = PowerOfTwoSingleEliminationCup(rounds=rounds,
+    def _build_bracket(self):
+        """Build the bracket."""
+        Match = self.MatchClass
+        rounds = self.round_count
+        self.winners_bracket = PowerOfTwoSingleEliminationCup(match_class=Match,
+                                                              rounds=rounds,
                                                               teams=self.teams)
-        self.losers_bracket = PowerOfTwoLosersBracket(rounds=rounds)
+        self.losers_bracket = PowerOfTwoLosersBracket(match_class=Match, rounds=rounds)
         self.bracket_progression = [self.losers_bracket, self.winners_bracket,
                                     self.losers_bracket] * (rounds - 1)
         self.current_bracket = self.winners_bracket
