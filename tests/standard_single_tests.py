@@ -1,7 +1,7 @@
 # -*- coding: utf-8  -*-
 """Tests for standard single-elimination cups."""
 
-# Copyright (C) 2015 Alexander Jones
+# Copyright (C) 2015-17 Alexander Jones
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Lesser General Public License as published
@@ -89,10 +89,13 @@ class TestStandardSingleEliminationCup(TestCase):
     def test_cup_results(self):
         """Test the results of playing cup."""
         teams = ['Team {}'.format(x + 1) for x in range(8)]
+        teams[3] = None
         cup = CupClass(rounds=3, teams=teams)
-        for i in range(6):
+        for i in range(5):
             self.assertIsInstance(cup.play_match(), unicode, 'Cup ended early.')
         self.assertRaises(CupFinished, cup.play_match)
+        sf1_match = cup.matches[1][0]
+        self.assertEqual(sf1_match.team2, teams[2], 'Walkover not awarded.')
         final_match = cup.matches[2][0]
         self.assertEqual(final_match.team1, teams[0], 'First finalist is wrong.')
         self.assertEqual(final_match.team2, teams[4], 'Second finalist is wrong.')
