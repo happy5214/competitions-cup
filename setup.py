@@ -13,7 +13,7 @@ with open(path.join(here, 'README.rst'), encoding='utf-8') as f:
 
 setup(
     name='competitions-cup',
-    version='0.5b1',
+    version='0.5',
 
     description='Generic cup competitions',
     long_description=long_description,
@@ -42,5 +42,5 @@ setup(
 
     test_suite='tests',
 
-    install_requires=['competitions-match>=0.2.1'],
+    install_requires=['competitions-match>=0.3'],
 )
