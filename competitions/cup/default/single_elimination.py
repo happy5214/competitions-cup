@@ -50,7 +50,28 @@ class SingleEliminationCup(StandardCup):
             first_round[x].team1 = self.teams[x * 2]
             first_round[x].team2 = self.teams[x * 2 + 1]
 
-    # Duplicated
+    def _build_bracket(self):
+        """Build the nested list representing the bracket."""
+        Match = self.MatchClass
+        match_count = self.team_count // 2
+        self.matches.append([Match(self.teams[i * 2], self.teams[i * 2 + 1])
+                             for i in range(match_count)])
+        match_num = 1
+        match_count //= 2
+        match_num = self._build_second_round(match_count, match_num)
+        for __ in range(2, self.round_count):
+            match_count //= 2
+            round = []
+            for ___ in range(match_count):
+                round.append(Match('Match {} Winner'.format(match_num),
+                                   'Match {} Winner'.format(match_num + 1)))
+                match_num += 2
+            self.matches.append(round)
+
+    def _build_second_round(self, match_count, match_num):
+        """Build the bracket's second round."""
+        raise NotImplementedError
+
     def _assign_winner(self, winner):
         """Assign winner to their next match."""
         next_match = self.matches[self.index[0] + 1][self.index[1] // 2]
@@ -99,24 +120,6 @@ class StandardSingleEliminationCup(SingleEliminationCup):
         self.matches.append(round)
         return match_num
 
-    def _build_bracket(self):
-        """Build the nested list representing the bracket."""
-        Match = self.MatchClass
-        match_count = self.team_count // 2
-        self.matches.append([Match(self.teams[i * 2], self.teams[i * 2 + 1])
-                             for i in range(match_count)])
-        match_num = 1
-        match_count //= 2
-        match_num = self._build_second_round(match_count, match_num)
-        for __ in range(2, self.round_count):
-            match_count //= 2
-            round = []
-            for ___ in range(match_count):
-                round.append(Match('Match {} Winner'.format(match_num),
-                                   'Match {} Winner'.format(match_num + 1)))
-                match_num += 2
-            self.matches.append(round)
-
     def _set_current_match(self):
         """Set the current match."""
         super(StandardSingleEliminationCup, self)._set_current_match()
@@ -128,18 +131,13 @@ class PowerOfTwoSingleEliminationCup(SingleEliminationCup):
 
     """Standard single-elimination cup for powers of two (4, 8, 16, etc.)."""
 
-    def _build_bracket(self):
-        """Build the nested list representing the bracket."""
+    def _build_second_round(self, match_count, match_num):
+        """Build the bracket's second round."""
         Match = self.MatchClass
-        match_count = self.team_count // 2
-        self.matches.append([Match(self.teams[i * 2], self.teams[i * 2 + 1])
-                             for i in range(match_count)])
-        match_num = 1
-        for __ in range(1, self.round_count):
-            match_count //= 2
-            round = []
-            for ___ in range(match_count):
-                round.append(Match('Match {} Winner'.format(match_num),
-                                   'Match {} Winner'.format(match_num + 1)))
-                match_num += 2
-            self.matches.append(round)
+        round = []
+        for ___ in range(match_count):
+            round.append(Match('Match {} Winner'.format(match_num),
+                               'Match {} Winner'.format(match_num + 1)))
+            match_num += 2
+        self.matches.append(round)
+        return match_num
