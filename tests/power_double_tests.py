@@ -1,7 +1,7 @@
 # -*- coding: utf-8  -*-
 """Tests for standard double-elimination cups for powers of two."""
 
-# Copyright (C) 2016 Alexander Jones
+# Copyright (C) 2016-17 Alexander Jones
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Lesser General Public License as published
@@ -23,8 +23,9 @@ from __future__ import unicode_literals
 from . import TestCase, PY3
 
 from competitions.cup import CupFinished
-from competitions.cup.default.PowerOfTwoDoubleEliminationCup import PowerOfTwoDoubleEliminationCup
-from competitions.cup.default.PowerOfTwoLosersBracket import PowerOfTwoLosersBracket
+from competitions.cup.default.poweroftwo_double import (
+    PowerOfTwoDoubleEliminationCup, PowerOfTwoLosersBracket
+)
 from competitions.match.default.TestMatch import TestMatch
 
 if PY3:
@@ -91,7 +92,7 @@ class TestPowerOfTwoDoubleEliminationCup(TestCase):
         """Test the results of playing cup."""
         teams = ['Team {}'.format(x + 1) for x in range(8)]
         cup = CupClass(match_class=MatchClass, rounds=3, teams=teams)
-        for i in range(13):
+        for __ in range(13):
             self.assertIsInstance(cup.play_match(), unicode, 'Cup ended early.')
         self.assertRaises(CupFinished, cup.play_match)
         final_match = cup.final
@@ -103,7 +104,7 @@ class TestPowerOfTwoDoubleEliminationCup(TestCase):
         """Test replaying the final depending on the winner."""
         teams = ['Team {}'.format(x + 1) for x in range(8)]
         cup = CupClass(match_class=MatchClass, rounds=3, teams=teams)
-        for i in range(13):
+        for __ in range(13):
             self.assertIsInstance(cup.play_match(), unicode, 'Cup ended early.')
         cup.final.team1, cup.final.team2 = cup.final.team2, cup.final.team1
         self.assertRaises(CupFinished, cup.play_match)
@@ -257,7 +258,7 @@ class TestPowerOfTwoLosersBracket(TestCase):
         bracket = PowerOfTwoLosersBracket(match_class=MatchClass, rounds=3)
         for team in teams:
             bracket.add_team(team)
-        for i in range(5):
+        for __ in range(5):
             self.assertIsInstance(bracket.play_match(), unicode, 'Cup ended early.')
         self.assertRaises(CupFinished, bracket.play_match)
         final_match = bracket.matches[3][0]

@@ -1,7 +1,7 @@
 # -*- coding: utf-8  -*-
 """Stepladder cup."""
 
-# Copyright (C) 2015 Alexander Jones
+# Copyright (C) 2015-17 Alexander Jones
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Lesser General Public License as published

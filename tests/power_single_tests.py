@@ -1,7 +1,7 @@
 # -*- coding: utf-8  -*-
 """Tests for standard single-elimination cups for powers of two."""
 
-# Copyright (C) 2015 Alexander Jones
+# Copyright (C) 2015-17 Alexander Jones
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Lesser General Public License as published
@@ -23,7 +23,7 @@ from __future__ import unicode_literals
 from . import TestCase, PY3
 
 from competitions.cup import CupFinished
-from competitions.cup.default.PowerOfTwoSingleEliminationCup import PowerOfTwoSingleEliminationCup
+from competitions.cup.default.single_elimination import PowerOfTwoSingleEliminationCup
 from competitions.match.default.TestMatch import TestMatch
 
 if PY3:
@@ -83,7 +83,7 @@ class TestPowerOfTwoSingleEliminationCup(TestCase):
         """Test the results of playing cup."""
         teams = ['Team {}'.format(x + 1) for x in range(8)]
         cup = CupClass(match_class=MatchClass, rounds=3, teams=teams)
-        for i in range(6):
+        for __ in range(6):
             self.assertIsInstance(cup.play_match(), unicode, 'Cup ended early.')
         self.assertRaises(CupFinished, cup.play_match)
         final_match = cup.matches[2][0]

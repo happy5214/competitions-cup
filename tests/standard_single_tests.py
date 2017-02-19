@@ -23,7 +23,7 @@ from __future__ import unicode_literals
 from . import TestCase, PY3
 
 from competitions.cup import CupFinished
-from competitions.cup.default.StandardSingleEliminationCup import StandardSingleEliminationCup
+from competitions.cup.default.single_elimination import StandardSingleEliminationCup
 from competitions.match.default.TestMatch import TestMatch
 
 if PY3:
@@ -84,7 +84,7 @@ class TestStandardSingleEliminationCup(TestCase):
         teams = ['Team {}'.format(x + 1) for x in range(8)]
         teams[3] = None
         cup = CupClass(match_class=MatchClass, rounds=3, teams=teams)
-        for i in range(5):
+        for __ in range(5):
             self.assertIsInstance(cup.play_match(), unicode, 'Cup ended early.')
         self.assertRaises(CupFinished, cup.play_match)
         sf1_match = cup.matches[1][0]
