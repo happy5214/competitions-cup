@@ -11,7 +11,12 @@ brackets for any number of teams.
 Changes in v0.5
 ---------------
 
-- New interface to cup classes 
+- New interface to cup classes
+
+Changes within the v0.5 series
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+- v0.5.1: Merged several modules and renamed what was left
 
 Changes in v0.4
 ---------------

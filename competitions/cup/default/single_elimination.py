@@ -22,7 +22,7 @@ from competitions.cup import StandardCup, init_nested_list
 
 
 class SingleEliminationCup(StandardCup):
-    
+
     """Single-elimination cup."""
 
     def __init__(self, match_class, rounds=0, teams=[]):

@@ -33,8 +33,10 @@ class StepladderCup(StandardCup):
         """
         super(StepladderCup, self).__init__(match_class=match_class,
                                             teams=teams,
-                                            team_count=(team_count if team_count else len(teams)),
-                                            rounds=(team_count - 1 if team_count else len(teams) - 1))
+                                            team_count=(team_count if team_count
+                                                        else len(teams)),
+                                            rounds=(team_count - 1 if team_count
+                                                    else len(teams) - 1))
 
     def _build_bracket(self):
         """Build the nested list representing the bracket."""
