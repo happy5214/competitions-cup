@@ -28,6 +28,8 @@ class SingleEliminationCup(StandardCup):
     def __init__(self, match_class, rounds=0, teams=[]):
         """Constructor.
 
+        @param match_class: The match simulator class
+        @type match_class: Match
         @param rounds: The number of rounds
         @type rounds: int
         @param teams: An optional list of teams
