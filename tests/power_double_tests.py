@@ -1,7 +1,7 @@
 # -*- coding: utf-8  -*-
 """Tests for standard double-elimination cups for powers of two."""
 
-# Copyright (C) 2016-17 Alexander Jones
+# Copyright (C) 2016, 2017 Alexander Jones
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Lesser General Public License as published
